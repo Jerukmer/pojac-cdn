@@ -690,20 +690,29 @@
       return map[fmt] || '📄';
     }
 
-    // Bangun opsi filter format secara dinamis dari isi dataset (terurut terbanyak)
+    // Format utama yang diizinkan tampil di filter (sesuai pilihan: PDF, MP3, DOC, PPTX, DOCX)
+    const ALLOWED_FORMATS = ['PDF', 'MP3', 'DOC', 'PPTX', 'DOCX'];
+
+    // Bangun opsi filter format secara dinamis (hanya format terpilih)
     function buildFormatFilter() {
       const counts = {};
       allBooks.forEach(b => { counts[b[4]] = (counts[b[4]] || 0) + 1; });
-      const sorted = Object.keys(counts).sort((a, b) => counts[b] - counts[a]);
       const select = document.getElementById('format-filter');
       if (!select) return;
       const current = selectedFmt;
       let html = '<option value="">Semua Format File</option>';
-      sorted.forEach(fmt => {
-        html += `<option value="${escapeHtml(fmt)}">${getFormatEmoji(fmt)} ${escapeHtml(fmt)} (${counts[fmt].toLocaleString('id-ID')} file)</option>`;
+      ALLOWED_FORMATS.forEach(fmt => {
+        if (counts[fmt]) {
+          html += `<option value="${escapeHtml(fmt)}">${getFormatEmoji(fmt)} ${escapeHtml(fmt)} (${counts[fmt].toLocaleString('id-ID')} file)</option>`;
+        }
       });
       select.innerHTML = html;
-      if (current) select.value = current;
+      if (current && ALLOWED_FORMATS.includes(current)) {
+        select.value = current;
+      } else if (current && !ALLOWED_FORMATS.includes(current)) {
+        selectedFmt = '';
+        select.value = '';
+      }
     }
 
     function escapeHtml(str) {
