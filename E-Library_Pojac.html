@@ -1131,13 +1131,7 @@
     }
 
     function getLanguageBadge(langName) {
-      switch (langName) {
-        case 'Arab': return '<span class="bg-emerald-100 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded-md text-[10px] font-bold">🇸🇦 Arab</span>';
-        case 'Terjemahan (Arab - ID)': return '<span class="bg-brand-100 text-brand-800 border border-brand-200 px-2 py-0.5 rounded-md text-[10px] font-bold">📖 Terjemahan</span>';
-        case 'Pegon / Jawa': return '<span class="bg-amber-100 text-amber-800 border border-amber-200 px-2 py-0.5 rounded-md text-[10px] font-bold">📜 Pegon</span>';
-        case 'Inggris': return '<span class="bg-blue-100 text-blue-800 border border-blue-200 px-2 py-0.5 rounded-md text-[10px] font-bold">🇬🇧 English</span>';
-        default: return '<span class="bg-slate-100 text-slate-700 border border-slate-200 px-2 py-0.5 rounded-md text-[10px] font-semibold">🇮🇩 ID</span>';
-      }
+      return '';
     }
 
     // Palette theme generator for procedural luxury covers
@@ -1219,10 +1213,9 @@
                   </button>
                 </div>
 
-                <!-- Tag Bahasa & Kategori -->
+                <!-- Tag Kategori & Ukuran -->
                 <div class="flex items-center gap-1.5 mb-1.5 flex-wrap">
-                  ${getLanguageBadge(langName)}
-                  <span class="text-[10px] text-slate-500 truncate max-w-[110px] font-medium" title="${escapeHtml(displayCat(catName))}">${escapeHtml(displayCat(catName))}</span>
+                  <span class="text-[10px] text-slate-500 truncate max-w-[160px] font-medium" title="${escapeHtml(displayCat(catName))}">${escapeHtml(displayCat(catName))}</span>
                   <span class="ml-auto text-[10px] text-slate-400 font-mono font-bold shrink-0">${sizeMb.toFixed(1)} MB</span>
                 </div>
 
@@ -1290,7 +1283,7 @@
               <td class="py-2 px-4 font-bold text-slate-900 max-w-md ${isAr ? 'arabic-title' : 'truncate'}" title="${escapeHtml(title)}">${escapeHtml(title)}</td>
               <td class="py-2 px-4 text-slate-600 max-w-[200px] truncate font-medium">${escapeHtml(displayCat(catName))}</td>
               <td class="py-2 px-4 font-bold text-slate-700 text-center font-mono">${jilid}</td>
-              <td class="py-2 px-4 text-center">${getLanguageBadge(langName)}</td>
+              <td class="py-2 px-4 text-center text-xs text-slate-600 font-medium">${escapeHtml(langName)}</td>
               <td class="py-2 px-4 text-center"><span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold ${getFormatBadgeColor(fmt)} font-mono">${fmt}</span></td>
               <td class="py-2 px-4 text-slate-600 font-mono text-right font-medium">${sizeMb.toFixed(2)} MB</td>
               <td class="py-2 px-4 text-center space-x-1">
