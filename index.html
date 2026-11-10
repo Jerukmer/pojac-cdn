@@ -692,7 +692,7 @@
   <!-- 13. DATA SCRIPTS & LOGIC                                                  -->
   <!-- ========================================================================= -->
   <script src="config.js?v=2.2.0"></script>
-  <script src="assets/elegant-cover.js?v=2.3.0"></script>
+  <script src="assets/elegant-cover.js?v=2.4.0"></script>
   <script src="catalog_data.js?v=2.2.0"></script>
 
   <script>
@@ -833,7 +833,6 @@
               const it = matches[Number(im.dataset.sugIdx)];
               if (it && POJAC_COVER.noPreview(it[4])) {
                 im.onerror = null;
-                im.src = 'assets/cover_pojak.jpg';
                 POJAC_COVER.generate(it, catalog.categories).then(url => {
                   if (im.isConnected) im.src = url;
                 }).catch(() => {});

@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer">
   <title>POJAC E-Library — Katalog Digital Pojok Baca</title>
   <meta name="description" content="Katalog digital 34.000+ koleksi kitab kuning, e-book, audio kajian & literatur modern POJAC (Pojok Baca).">
   <link rel="icon" type="image/png" href="assets/logo_pojak_square.png">
@@ -571,7 +572,7 @@
   <!-- SCRIPT KONFIG, QR LIB, GENERATOR SAMPUL, DATASET & CLIENT LOGIC -->
   <script src="config.js?v=2.2.0"></script>
   <script src="assets/qrcode.min.js?v=2.2.0"></script>
-  <script src="assets/elegant-cover.js?v=2.3.0"></script>
+  <script src="assets/elegant-cover.js?v=2.4.0"></script>
   <script src="catalog_data.js?v=2.2.0" charset="utf-8"></script>
   <script>
     let allBooks = [];
@@ -672,11 +673,9 @@
       img.dataset.fmt = book[4] || '';
       img.dataset.jilid = book[2] || '-';
       img.onerror = handleCoverError;
-      if (book[8]) { img.dataset.tier = '0'; img.src = book[8]; return; }
+      if (book[8] && THUMB_PROXY) { img.dataset.tier = '0'; img.src = book[8]; return; }
       if (window.POJAC_COVER && POJAC_COVER.noPreview(book[4])) {
-        // Format tanpa preview dokumen: tampil default sekejap, lalu swap ke sampul elegan
         img.dataset.tier = '3';
-        img.src = 'assets/cover_pojak.jpg';
         elegantCoverFor(book).then(url => {
           if (img.isConnected && img.dataset.gid === (book[6] || '')) img.src = url;
         }).catch(() => {});
