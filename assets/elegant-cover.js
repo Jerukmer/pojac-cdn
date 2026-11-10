@@ -6,12 +6,12 @@
  * memiliki preview/thumbnail (audio, video, arsip, dokumen tertentu, atau
  * thumbnail Google Drive yang gagal dimuat).
  *
- * Desain mengacu pada gaya sampul editorial modern:
- *   - Varian A (Maroon / Solid Deep Color):
- *     Latar solid pekat (maroon/navy/emerald/teal), watermark miring "POJAC"
- *     di kanan atas, garis aksen vertikal kuning-emas di kiri bawah, dan judul
- *     sans-serif tebal rata kiri di bagian bawah.
- *   - Varian B (Matte Charcoal Two-Tone):
+ * Desain identik dengan referensi sampul editorial pilihan pengguna:
+ *   - Varian A (Deep Maroon + Gold Vertical Bar):
+ *     Latar merah marun pekat (#6E0B14), watermark miring di kanan atas
+ *     (di sebelah kiri tombol bintang favorit agar tidak tertutup), garis
+ *     vertikal kuning-emas (#EAB308) di kiri bawah, dan judul putih tebal.
+ *   - Varian B (Matte Charcoal #1E1E1E + Coral & White Two-Tone Title):
  *     Latar hitam-abu matte (#1E1E1E), judul sans-serif ekstra tebal rata kiri
  *     dengan kombinasi 2 warna (koral #E05A5A & putih bersih #FFFFFF),
  *     subjudul deskriptif rapi di bawahnya, dan watermark di kiri bawah.
@@ -30,26 +30,6 @@
     'SHA256', 'ZIP-SHA-256', 'BOK', 'CHM', 'DJVU', 'MOBI', 'EPUB', 'TXT'
   ]);
 
-  // Palet Varian A: [warnaLatarSolid, warnaGarisVertikal]
-  var SOLID_THEMES = [
-    ['#6E0B14', '#EAB308'], // Deep Maroon + Gold bar (persis contoh SS kiri)
-    ['#5B0812', '#F59E0B'], // Rich Burgundy + Amber bar
-    ['#0F2942', '#FACC15'], // Deep Navy + Gold bar
-    ['#0B3B2E', '#F59E0B'], // Deep Emerald + Amber bar
-    ['#2E1035', '#FBBF24'], // Deep Plum + Gold bar
-    ['#16323B', '#F59E0B']  // Deep Petrol + Amber bar
-  ];
-
-  // Palet Varian B (Matte Charcoal #1E1E1E): [warnaLatar, warnaAksenJudul]
-  var CHARCOAL_THEMES = [
-    ['#1E1E1E', '#E05A5A'], // Matte Charcoal + Coral Red (persis contoh SS tengah & kanan)
-    ['#1E1E1E', '#E05A5A'], // Bobot lebih tinggi untuk Coral Red sesuai SS
-    ['#1C1E22', '#F06464'], // Warm Coral
-    ['#1E1E1E', '#E87961'], // Terracotta Coral
-    ['#1B2028', '#38BDF8'], // Sky Cyber Accent
-    ['#1B221F', '#34D399']  // Emerald Accent
-  ];
-
   function hashStr(s) {
     var h = 0, i;
     for (i = 0; i < s.length; i++) h = ((h * 31) + s.charCodeAt(i)) | 0;
@@ -60,12 +40,18 @@
     return /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/.test(t || '');
   }
 
-  // Bersihkan judul dari awalan "(BARU)", ekstensi file, atau underscore agar tampak seperti sampul buku asli
+  // Rapikan judul sampul agar bersih dari awalan "(BARU)", emoji, atau ekstensi file
   function cleanTitle(raw) {
     var s = String(raw || 'Koleksi Literasi POJAC').trim();
     s = s.replace(/^\s*(\(BARU\)|\[BARU\]|BARU\s*[-:–])\s*/i, '');
     s = s.replace(/\.(pdf|mp3|mp4|mkv|docx?|xlsx?|pptx?|zip|rar|epub|djvu|chm|txt)$/i, '');
+    // Hapus simbol/emoji dekoratif di awal/akhir agar tipografi buku bersih
+    s = s.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]+/gu, '');
     s = s.replace(/_/g, ' ').replace(/\s{2,}/g, ' ').trim();
+    // Jika seluruh judul huruf kecil, ubah huruf awal kata menjadi kapital (Title Case)
+    if (s && s === s.toLowerCase() && !isArabic(s)) {
+      s = s.replace(/\b[a-z]/g, function (c) { return c.toUpperCase(); });
+    }
     return s || 'Koleksi Literasi POJAC';
   }
 
@@ -106,41 +92,36 @@
     var catName = (opts.categories && opts.categories[opts.catIdx]) || 'Khazanah Keilmuan';
     catName = String(catName).replace(/^\d+\.\s*/, '').trim();
 
-    // Pilih antara Varian A (Solid Maroon/Deep + Bar Vertikal) dan Varian B (Matte Charcoal Two-Tone)
-    // Rasio: ~35% Varian A (seperti kartu kiri), ~65% Varian B (seperti kartu tengah & kanan)
+    // Pilih antara Varian A (Maroon + Gold Bar, 1/3) dan Varian B (Matte Charcoal + Coral/White, 2/3)
+    // Persis komposisi 1 kartu Maroon & 2 kartu Charcoal pada tangkapan layar referensi
     var isVariantA = (h % 3 === 0);
 
     var size, wrapped, lines, lh, i;
-    var padX = 42;
-    var maxW = W - padX * 2 - 10;
+    var padX = 40;
+    var maxW = W - padX * 2 - 6;
 
     if (isVariantA) {
       // =========================================================================
-      // VARIAN A: LATAR SOLID MAROON/PEKAT + GARIS VERTIKAL EMAS + JUDUL BAWAH
-      // (Persis seperti kartu kiri "Asas dalam Kewarga-negaraan")
+      // VARIAN A: DEEP MAROON (#6E0B14) + GARIS VERTIKAL EMAS + JUDUL PUTIH BAWAH
       // =========================================================================
-      var st = SOLID_THEMES[h % SOLID_THEMES.length];
-      var bgCol = st[0];
-      var barCol = st[1];
-
-      ctx.fillStyle = bgCol;
+      ctx.fillStyle = '#6E0B14';
       ctx.fillRect(0, 0, W, H);
 
-      // Watermark kanan atas (gaya miring tebal seperti "KANALCASN")
+      // Watermark kanan atas (digeser ke kiri dari tombol bintang agar terbaca utuh seperti SS)
       ctx.save();
       ctx.font = 'italic 800 13px "Plus Jakarta Sans", system-ui, sans-serif';
       ctx.fillStyle = 'rgba(255, 255, 255, 0.92)';
       ctx.textAlign = 'right';
       ctx.textBaseline = 'top';
-      ctx.fillText('POJAC', W - 28, 34);
+      ctx.fillText('POJAC', W - 56, 44);
       ctx.restore();
 
       // Hitung ukuran font judul (rata kiri di bagian bawah)
       var textX = padX + 18;
-      var textMaxW = W - textX - 32;
+      var textMaxW = W - textX - 28;
       var maxLinesA = 4;
 
-      for (size = arabic ? 38 : 38; size >= 22; size -= 2) {
+      for (size = arabic ? 38 : 38; size >= 24; size -= 2) {
         ctx.font = arabic
           ? '700 ' + size + 'px "Amiri", serif'
           : '800 ' + size + 'px "Plus Jakarta Sans", system-ui, sans-serif';
@@ -149,19 +130,18 @@
         if (lines.length && !wrapped.truncated) break;
       }
 
-      lh = Math.round(size * 1.14);
+      lh = Math.round(size * 1.13);
       var totalTextH = lines.length * lh;
-      // Posisikan blok judul di sepertiga bawah sampul (sekitar y = 470 ke atas)
-      var bottomAnchorY = 478;
+      var bottomAnchorY = 482;
       var startY = bottomAnchorY - totalTextH;
       if (startY < 220) startY = 220;
 
-      // Garis vertikal emas di sebelah kiri judul
+      // Garis vertikal kuning-emas (#EAB308) di sebelah kiri judul
       var barX = padX;
       var barTop = startY + 4;
       var barHeight = totalTextH - 8;
-      if (barHeight < 36) barHeight = 36;
-      ctx.fillStyle = barCol;
+      if (barHeight < 38) barHeight = 38;
+      ctx.fillStyle = '#EAB308';
       ctx.fillRect(barX, barTop, 5.5, barHeight);
 
       // Render baris judul putih bersih
@@ -174,18 +154,14 @@
 
     } else {
       // =========================================================================
-      // VARIAN B: MATTE CHARCOAL (#1E1E1E) + JUDUL 2 WARNA (KORAL & PUTIH) + SUBJUDUL
-      // (Persis seperti kartu tengah & kanan "Dewan Perwakilan Daerah (DPD)")
+      // VARIAN B: MATTE CHARCOAL (#1E1E1E) + JUDUL 2 WARNA (KORAL #E05A5A & PUTIH)
       // =========================================================================
-      var ct = CHARCOAL_THEMES[h % CHARCOAL_THEMES.length];
-      var charBg = ct[0];
-      var accentCol = ct[1];
-
-      ctx.fillStyle = charBg;
+      ctx.fillStyle = '#1E1E1E';
       ctx.fillRect(0, 0, W, H);
 
+      var accentCol = '#E05A5A';
       var maxLinesB = 4;
-      for (size = arabic ? 38 : 38; size >= 22; size -= 2) {
+      for (size = arabic ? 38 : 38; size >= 24; size -= 2) {
         ctx.font = arabic
           ? '700 ' + size + 'px "Amiri", serif'
           : '800 ' + size + 'px "Plus Jakarta Sans", system-ui, sans-serif';
@@ -200,14 +176,13 @@
       ctx.textAlign = arabic ? 'right' : 'left';
       ctx.textBaseline = 'top';
 
-      // Pewarnaan 2 warna bergantian seperti contoh ("Dewan" [koral], "Perwakilan" [putih], "Daerah (DPD)" [koral])
+      // Pewarnaan 2 warna (Koral #E05A5A & Putih #FFFFFF) persis contoh SS
       for (i = 0; i < lines.length; i++) {
         if (lines.length === 1) {
           ctx.fillStyle = accentCol;
         } else if (lines.length === 2) {
           ctx.fillStyle = (i === 0) ? accentCol : '#FFFFFF';
         } else {
-          // Untuk 3-4 baris: baris tengah putih, baris lainnya koral (atau selang-seling)
           ctx.fillStyle = (i % 2 === 1) ? '#FFFFFF' : accentCol;
         }
         ctx.fillText(lines[i], arabic ? (W - padX) : padX, topStartY + i * lh);
@@ -215,21 +190,21 @@
 
       // Subjudul deskriptif di bawah judul utama
       var subY = topStartY + lines.length * lh + 26;
-      var subText = catName + ' — Referensi, materi, dan literatur pilihan.';
+      var subText = 'Pembahasan, materi, dan referensi ' + catName.toLowerCase() + '.';
       if (opts.jilid && opts.jilid !== '-') {
-        subText = catName + ' • ' + opts.jilid + ' dan pembahasan lengkapnya.';
+        subText = 'Edisi ' + opts.jilid + ', materi dan pembahasan selengkapnya.';
       }
-      ctx.font = '400 16px "Plus Jakarta Sans", system-ui, sans-serif';
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.86)';
+      ctx.font = '400 16.5px "Plus Jakarta Sans", system-ui, sans-serif';
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.88)';
       ctx.textAlign = 'left';
       var subWrap = wrapLines(ctx, subText, maxW, 2);
       for (i = 0; i < subWrap.lines.length; i++) {
         ctx.fillText(subWrap.lines[i], padX, subY + i * 22);
       }
 
-      // Watermark di kiri bawah (seperti "KANALCASN" terpotong halus di bagian bawah kartu tengah)
+      // Watermark di kiri bawah
       ctx.save();
-      ctx.font = '800 13px "Plus Jakarta Sans", system-ui, sans-serif';
+      ctx.font = 'italic 800 12.5px "Plus Jakarta Sans", system-ui, sans-serif';
       ctx.fillStyle = 'rgba(255, 255, 255, 0.88)';
       ctx.textAlign = 'left';
       ctx.textBaseline = 'bottom';
@@ -264,7 +239,6 @@
     return NO_PREVIEW.has(String(fmt || '').toUpperCase());
   }
 
-  // Pastikan font siap agar render pertama memakai huruf yang benar
   if (document.fonts && document.fonts.ready) {
     document.fonts.ready.then(function () { cache.clear(); }).catch(function () {});
   }
