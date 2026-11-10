@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer">
+  <title>POJAC — The Next-Gen Digital Knowledge & Library Hub</title>
+  <meta name="description" content="POJAC (Pojok Baca): Platform perpustakaan digital dan khazanah keilmuan modern berteknologi cloud yang menghimpun 34.454+ koleksi kitab kuning, literatur pesantren, modul AI, dan sains masa depan.">
+  <link rel="icon" type="image/png" href="assets/logo_pojak_square.png">
+
+  <!-- Open Graph / Meta Social -->
+  <meta property="og:title" content="POJAC — High-Tech Digital Knowledge & Library Hub">
+  <meta property="og:description" content="Akses terbuka ke 34.454+ kitab klasik dan buku teknologi modern. 100% bebas akses berbasis Google Drive Cloud.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/cover_pojak.jpg">
+
+  <!-- Google Fonts: Plus Jakarta Sans, Playfair Display, Amiri -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            editorial: ['"Playfair Display"', 'Georgia', 'serif'],
+            arabic: ['"Amiri"', 'Traditional Arabic', 'serif']
+          },
+          colors: {
+            brand: {
+              primary: '#059669',    // Emerald Tech Green
+              primaryDark: '#047857',
+              cyan: '#0284C7',       // High-Tech Cyber Blue
+              cyanLight: '#38BDF8',
+              violet: '#7C3AED',
+              dark: '#0B0F19',       // ITFirm Deep Tech Dark
+              darkCard: '#111827',
+              darkBorder: '#1F2937',
+              amber: '#F59E0B'
+            }
+          },
+          boxShadow: {
+            'glow-primary': '0 0 35px -5px rgba(5, 150, 105, 0.35)',
+            'glow-cyan': '0 0 35px -5px rgba(2, 132, 199, 0.35)',
+            'itfirm-card': '0 12px 35px -10px rgba(0, 0, 0, 0.08), 0 0 1px 1px rgba(0, 0, 0, 0.04)',
+            'itfirm-hover': '0 25px 50px -12px rgba(5, 150, 105, 0.25)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Mode gelap: terapkan preferensi tersimpan sebelum render (anti-kilat putih) -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('pojac_theme');
+        if (t === 'dark' || (!t && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        }
+      } catch (e) { /* abaikan */ }
+    })();
+  </script>
+  <link rel="stylesheet" href="assets/dark-mode.css?v=2.3.0">
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #F1F5F9; }
+    ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* ITFirm Signature Gradient Text */
+    .text-itfirm-gradient {
+      background: linear-gradient(135deg, #059669 0%, #0284C7 60%, #059669 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientShift 6s ease infinite;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* ITFirm Animated Gradient Button */
+    .btn-itfirm-primary {
+      background: linear-gradient(90deg, #059669 0%, #0284C7 50%, #059669 100%);
+      background-size: 200% auto;
+      transition: all 0.4s ease;
+    }
+    .btn-itfirm-primary:hover {
+      background-position: right center;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 25px -4px rgba(5, 150, 105, 0.4);
+    }
+
+    /* ITFirm Grid Pattern Background */
+    .itfirm-dot-pattern {
+      background-image: radial-gradient(rgba(5, 150, 105, 0.12) 1.2px, transparent 1.2px);
+      background-size: 24px 24px;
+    }
+
+    .itfirm-dark-pattern {
+      background-image: radial-gradient(rgba(56, 189, 248, 0.08) 1.2px, transparent 1.2px);
+      background-size: 28px 28px;
+    }
+
+    /* Floating subtle animation */
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    .animate-float-slow {
+      animation: floatSlow 5s ease-in-out infinite;
+    }
+
+    @keyframes floatReverse {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(8px); }
+    }
+    .animate-float-reverse {
+      animation: floatReverse 6s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body class="bg-white text-slate-800 font-sans antialiased selection:bg-brand-primary selection:text-white flex flex-col min-h-screen overflow-x-hidden">
+
+  <!-- ========================================================================= -->
+  <!-- 1. ITFirm TOP BAR (HEADER INFO & SOCIAL)                                  -->
+  <!-- ========================================================================= -->
+  <div class="bg-slate-900 text-slate-300 text-xs py-2.5 px-4 border-b border-slate-800">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+      
+      <!-- Left Info -->
+      <div class="flex items-center gap-4">
+        <span class="flex items-center gap-2 text-slate-200">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <strong class="text-white">POJAC Cloud Hub:</strong> <span id="stat-top-total">34.089</span> Koleksi Aktif <span class="admin-only" style="display:none">(<span id="stat-top-gb">498,68</span> GB)</span>
+        </span>
+        <span class="hidden md:inline text-slate-600 admin-only" style="display:none">|</span>
+        <span class="hidden md:flex items-center gap-1.5 text-slate-400 admin-only" style="display:none">
+          <i class="fa-solid fa-server text-emerald-400"></i> Localhost Daemon (Port 8080)
+        </span>
+      </div>
+
+      <!-- Right Contact & Channels -->
+      <div class="flex items-center gap-4 text-[11px]">
+        <a href="https://whatsapp.com/channel/0029Vb8HMxVBVJkvcrjbf80m" target="_blank" rel="noopener noreferrer"
+           class="hover:text-emerald-400 transition flex items-center gap-1.5 font-medium">
+          <i class="fa-brands fa-whatsapp text-emerald-400"></i>
+          <span>Saluran WhatsApp</span>
+        </a>
+        <span class="text-slate-700">|</span>
+        <a href="https://t.me/pojac_1" target="_blank" rel="noopener noreferrer"
+           class="hover:text-cyan-400 transition flex items-center gap-1.5 font-medium">
+          <i class="fa-brands fa-telegram text-cyan-400"></i>
+          <span>@pojac_1</span>
+        </a>
+        <span class="text-slate-700 admin-only" style="display:none">|</span>
+        <a href="editor.html" class="admin-only hover:text-amber-400 transition flex items-center gap-1 font-semibold text-amber-300" style="display:none">
+          <i class="fa-solid fa-gear"></i> Editor
+        </a>
+        <button onclick="logoutAdmin()" class="admin-only hover:text-rose-400 transition font-semibold" style="display:none">Keluar Admin</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 2. ITFirm MAIN HEADER & NAVBAR                                            -->
+  <!-- ========================================================================= -->
+  <header class="sticky top-0 w-full z-40 bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-sm transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-[80px] gap-2 sm:gap-4">
+        
+        <!-- Logo POJAC -->
+        <a href="index.html" class="flex items-center gap-3 shrink-0 group">
+          <img src="assets/logo_pojak_square.png" alt="Logo POJAC" 
+               class="h-11 w-11 rounded-xl object-contain bg-slate-50 border border-slate-200 p-1 group-hover:scale-105 transition-transform" 
+               onerror="this.src='assets/cover_pojak.jpg'">
+          <div class="flex flex-col">
+            <span class="font-extrabold text-2xl tracking-tight text-slate-900 group-hover:text-brand-primary transition-colors">
+              POJAC
+            </span>
+            <span class="text-[11px] text-slate-500 font-medium -mt-0.5">Pojok Baca</span>
+          </div>
+        </a>
+
+        <!-- Main Navigation Links (ITFirm Style) -->
+        <nav class="hidden lg:flex items-center gap-7 text-sm font-semibold text-slate-700">
+          <a href="#beranda" class="text-brand-primary font-bold hover:text-brand-primaryDark transition">Beranda</a>
+          <a href="#tentang" class="hover:text-brand-primary transition">Tentang Kami</a>
+          <a href="https://docs.google.com/spreadsheets/d/1_ObWupHQoo6bsDfFYGkOYu-vvmCAlIr1XmzSZmcgaA0/edit?gid=0#gid=0"
+             target="_blank" rel="noopener noreferrer" class="admin-only hover:text-brand-primary transition flex items-center gap-1 text-slate-500" style="display:none">
+            <span>Spreadsheet</span> <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+          </a>
+        </nav>
+
+        <!-- Right Side: Search & CTA Button (ITFirm "Get A Quote" Pattern) -->
+        <div class="flex items-center gap-3 shrink-0">
+          <!-- Tombol Mode Gelap / Terang -->
+          <button onclick="toggleTheme()" title="Mode Gelap / Terang" class="w-9 h-9 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-brand-primary hover:border-emerald-200 flex items-center justify-center transition shadow-xs">
+            <svg class="w-4 h-4 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+            <svg class="w-4 h-4 hidden dark:inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+          </button>
+
+          <!-- Instant Search Trigger -->
+          <div class="relative hidden sm:block">
+            <form onsubmit="handleNavSearch(event)" class="relative">
+              <i class="fa fa-search absolute left-3.5 top-3 text-slate-400 text-xs"></i>
+              <input type="text" id="navbarSearchInput" autocomplete="off"
+                     placeholder="Cari 34k+ judul..."
+                     class="w-48 xl:w-64 pl-9 pr-8 py-2 bg-slate-50 hover:bg-slate-100 focus:bg-white text-xs rounded-xl border border-slate-200 focus:border-brand-primary focus:ring-2 focus:ring-emerald-500/20 outline-none transition">
+              <button type="button" id="navbarSearchClear" class="hidden absolute right-3 top-2.5 text-slate-400 hover:text-slate-600">
+                <i class="fa fa-times text-xs"></i>
+              </button>
+            </form>
+
+            <!-- Autocomplete Suggestions Dropdown -->
+            <div id="suggestionsBox" class="hidden absolute right-0 top-full mt-2 w-80 sm:w-96 bg-white rounded-2xl border border-slate-200 shadow-2xl overflow-hidden z-50 text-xs">
+              <div class="p-2.5 border-b border-slate-100 bg-slate-50 flex items-center justify-between text-[11px] text-slate-500 font-bold">
+                <span>HASIL PENCARIAN CEPAT</span>
+                <span id="suggestCountBadge">0 hasil</span>
+              </div>
+              <div id="suggestionsList" class="max-h-72 overflow-y-auto divide-y divide-slate-100"></div>
+              <a id="btnViewAllSearch" href="E-Library_Pojac.html" class="block py-2.5 text-center text-xs font-bold text-brand-primary bg-emerald-50 hover:bg-emerald-100 transition">
+                Buka Semua Hasil di Katalog Lengkap ↗
+              </a>
+            </div>
+          </div>
+
+          <!-- Primary Gradient CTA (ITFirm "Get IT Solution" button) -->
+          <a href="E-Library_Pojac.html"
+             class="btn-itfirm-primary px-3.5 sm:px-5 py-2.5 rounded-xl text-xs font-extrabold text-white shadow-md flex items-center gap-2 shrink-0">
+            <i class="fa-solid fa-layer-group"></i>
+            <span>Akses Katalog<span class="hidden sm:inline"> (34k+)</span></span>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1">
+
+    <!-- ========================================================================= -->
+    <!-- 3. ITFirm HERO SECTION 2 (HERO WITH TECH GRAPHICS & FLOATING BADGES)      -->
+    <!-- ========================================================================= -->
+    <section id="beranda" class="relative pt-12 pb-20 lg:pt-20 lg:pb-28 overflow-hidden itfirm-dot-pattern border-b border-slate-100">
+      
+      <!-- Background Ambient Glow Circles (ITFirm Style) -->
+      <div class="absolute top-1/4 left-10 w-96 h-96 bg-emerald-400/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute top-1/3 right-10 w-96 h-96 bg-sky-400/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+        <div class="space-y-6">
+          
+          <!-- ITFirm Section Badge -->
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200/80 text-brand-primary font-extrabold text-xs tracking-wider uppercase shadow-xs">
+            <span class="w-2 h-2 rounded-full bg-brand-primary animate-ping"></span>
+            <span>Next-Gen Knowledge Hub &amp; Library</span>
+          </div>
+
+          <!-- Monumental Heading -->
+          <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.15]">
+            Khazanah Digital &amp; <br class="hidden sm:inline">
+            <span class="text-itfirm-gradient">Literatur Masa Depan</span>
+          </h1>
+
+          <!-- Subtitle Description -->
+          <p class="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+            Platform perpustakaan digital terbuka yang mempertemukan kedalaman <strong><span id="stat-hero-turath">5.441</span> Kitab Turath &amp; Makna Pegon Pesantren</strong> dengan kemajuan <strong>Artificial Intelligence, Pemrograman, &amp; Sains Modern</strong>.
+          </p>
+
+          <!-- Dual Action Buttons (ITFirm Home-2 Style) -->
+          <div class="pt-2 flex flex-wrap items-center justify-center gap-4">
+            <a href="E-Library_Pojac.html" 
+               class="btn-itfirm-primary px-7 py-3.5 rounded-xl text-sm font-extrabold text-white shadow-glow-primary flex items-center gap-2.5">
+              <span>Mulai Eksplorasi Buku</span>
+              <i class="fa-solid fa-arrow-right text-xs"></i>
+            </a>
+
+            <a href="#tentang" 
+               class="px-6 py-3.5 rounded-xl text-sm font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-300 shadow-sm transition flex items-center gap-2">
+              <i class="fa-regular fa-circle-play text-brand-primary"></i>
+              <span>Pelajari Ekosistem</span>
+            </a>
+          </div>
+
+          <!-- Mini Trust Elements -->
+          <div id="hero-trust-grid" class="pt-8 border-t border-slate-200/70 grid grid-cols-3 gap-6 max-w-lg mx-auto">
+            <div>
+              <div class="text-xl sm:text-2xl font-black text-slate-900"><span id="stat-hero-total">34.089</span></div>
+              <div class="text-[11px] font-medium text-slate-500">Judul Terindeks</div>
+            </div>
+            <div class="admin-only" style="display:none">
+              <div class="text-xl sm:text-2xl font-black text-brand-primary"><span id="stat-hero-gb">498,68</span> GB</div>
+              <div class="text-[11px] font-medium text-slate-500">Kapasitas Cloud</div>
+            </div>
+            <div>
+              <div class="text-xl sm:text-2xl font-black text-amber-500">100%</div>
+              <div class="text-[11px] font-medium text-slate-500">Bebas Akses</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- 4. ITFirm SECTION 8: PARTNERS & INFRASTRUKTUR TEKNOLOGI                   -->
+    <!-- ========================================================================= -->
+    <section class="py-12 bg-slate-50 border-b border-slate-200/80">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-8">
+          <span class="text-xs font-bold tracking-wider text-slate-400 uppercase">
+            Infrastruktur Cloud &amp; Ekosistem Teknologi
+          </span>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 items-center justify-center text-slate-500 font-semibold text-xs">
+          <div class="p-4 bg-white rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-center gap-2 hover:border-emerald-500 transition">
+            <i class="fa-brands fa-google-drive text-emerald-600 text-lg"></i>
+            <span>Google Drive Cloud</span>
+          </div>
+          <div class="p-4 bg-white rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-center gap-2 hover:border-emerald-500 transition">
+            <i class="fa-solid fa-server text-cyan-600 text-lg"></i>
+            <span>Localhost Server Engine</span>
+          </div>
+          <div class="p-4 bg-white rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-center gap-2 hover:border-emerald-500 transition">
+            <i class="fa-solid fa-bolt text-amber-500 text-lg"></i>
+            <span>HTTP 206 Streaming</span>
+          </div>
+          <div class="p-4 bg-white rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-center gap-2 hover:border-emerald-500 transition">
+            <i class="fa-solid fa-mobile-screen text-indigo-600 text-lg"></i>
+            <span>Multi-Device Responsive</span>
+          </div>
+          <div class="p-4 bg-white rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-center gap-2 hover:border-emerald-500 transition">
+            <i class="fa-solid fa-lock-open text-rose-500 text-lg"></i>
+            <span>Open Access Knowledge</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- 5. ITFirm SECTION 9: ABOUT US (PROFIL KHAZANAH POJAC)                     -->
+    <!-- ========================================================================= -->
+    <section id="tentang" class="py-20 lg:py-28 bg-white border-b border-slate-100 relative">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          
+          <!-- Left: Kartu Statistik & Highlight Fitur (Tanpa Sampul Gambar) -->
+          <div class="lg:col-span-6 relative">
+            <!-- Cahaya ambient di belakang kartu -->
+            <div class="pointer-events-none absolute -inset-10 bg-gradient-to-br from-emerald-500/10 via-cyan-500/5 to-transparent rounded-[3rem] blur-2xl"></div>
+
+            <div class="relative grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <!-- Kartu 1: Total Koleksi -->
+              <div class="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-itfirm-card relative overflow-hidden group hover:border-brand-primary/50 transition">
+                <div class="h-1 w-full bg-gradient-to-r from-brand-primary to-emerald-400 absolute top-0 left-0"></div>
+                <div class="w-10 h-10 rounded-xl bg-emerald-50 text-brand-primary flex items-center justify-center mb-4">
+                  <i class="fa-solid fa-book-bookmark text-lg"></i>
+                </div>
+                <div class="text-3xl font-black text-slate-900 tracking-tight tabular-nums">
+                  <span id="stat-about-total">34.089+</span>
+                </div>
+                <div class="text-[11px] font-extrabold text-slate-500 uppercase tracking-wider mt-1">Total Koleksi Berkas</div>
+                <p class="text-xs text-slate-500 mt-2 leading-relaxed">
+                  Kitab kuning turath, e-book ilmiah, dan audio kajian berkualitas tinggi.
+                </p>
+              </div>
+
+              <!-- Kartu 2: Rumpun Disiplin -->
+              <div class="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-itfirm-card relative overflow-hidden group hover:border-cyan-500/50 transition">
+                <div class="h-1 w-full bg-gradient-to-r from-cyan-500 to-sky-400 absolute top-0 left-0"></div>
+                <div class="w-10 h-10 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center mb-4">
+                  <i class="fa-solid fa-layer-group text-lg"></i>
+                </div>
+                <div class="text-3xl font-black text-slate-900 tracking-tight tabular-nums">
+                  <span id="stat-about-cats">25</span> Disiplin
+                </div>
+                <div class="text-[11px] font-extrabold text-slate-500 uppercase tracking-wider mt-1">Klasifikasi Terstruktur</div>
+                <p class="text-xs text-slate-500 mt-2 leading-relaxed">
+                  Mencakup tafsir, hadits, fikih, hingga modul coding &amp; kecerdasan buatan.
+                </p>
+              </div>
+
+              <!-- Kartu 3: Kapasitas Cloud -->
+              <div class="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-itfirm-card relative overflow-hidden group hover:border-amber-500/50 transition">
+                <div class="h-1 w-full bg-gradient-to-r from-amber-500 to-yellow-400 absolute top-0 left-0"></div>
+                <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center mb-4">
+                  <i class="fa-solid fa-cloud-arrow-down text-lg"></i>
+                </div>
+                <div class="text-3xl font-black text-slate-900 tracking-tight tabular-nums">501,7 GB</div>
+                <div class="text-[11px] font-extrabold text-slate-500 uppercase tracking-wider mt-1">Penyimpanan Cloud</div>
+                <p class="text-xs text-slate-500 mt-2 leading-relaxed">
+                  Streaming dokumen cepat dan andal langsung dari Google Drive Cloud Hub.
+                </p>
+              </div>
+
+              <!-- Kartu 4: Akses Bebas Biaya -->
+              <div class="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-itfirm-card relative overflow-hidden group hover:border-indigo-500/50 transition">
+                <div class="h-1 w-full bg-gradient-to-r from-indigo-500 to-purple-400 absolute top-0 left-0"></div>
+                <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-4">
+                  <i class="fa-solid fa-shield-heart text-lg"></i>
+                </div>
+                <div class="text-3xl font-black text-slate-900 tracking-tight tabular-nums">100%</div>
+                <div class="text-[11px] font-extrabold text-slate-500 uppercase tracking-wider mt-1">Bebas Akses Terbuka</div>
+                <p class="text-xs text-slate-500 mt-2 leading-relaxed">
+                  Wakaf keilmuan digital yang dapat dibaca kapan saja tanpa biaya langganan.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Text Content & Features -->
+          <div class="lg:col-span-6 space-y-6">
+            <div class="inline-block px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-brand-primary text-xs font-extrabold uppercase tracking-wider">
+              TENTANG POJAC DIGITAL
+            </div>
+
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
+              Menghubungkan Tradisi Turath dengan Kecakapan Teknologi Masa Depan
+            </h2>
+
+            <p class="text-sm text-slate-600 leading-relaxed">
+              POJAC (Pojok Baca) lahir dari aspirasi untuk mendemokratisasi akses literasi bagi generasi muda, santri, dan akademisi di seluruh Indonesia. Kami menyatukan naskah pesantren klasik dengan literatur sains, artificial intelligence, dan manajemen modern.
+            </p>
+
+            <!-- Feature Checkmarks (ITFirm Style) -->
+            <div class="space-y-3.5 pt-2">
+              <div class="flex items-start gap-3">
+                <div class="w-6 h-6 rounded-full bg-emerald-100 text-brand-primary flex items-center justify-center shrink-0 mt-0.5 text-xs">
+                  <i class="fa-solid fa-check"></i>
+                </div>
+                <div>
+                  <h3 class="text-xs font-bold text-slate-900">Pencarian Cepat Client-Side Super Instan</h3>
+                  <p class="text-xs text-slate-500">Mencari 34.000+ data dalam hitungan milidetik langsung dari browser tanpa jeda loading.</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-3">
+                <div class="w-6 h-6 rounded-full bg-emerald-100 text-brand-primary flex items-center justify-center shrink-0 mt-0.5 text-xs">
+                  <i class="fa-solid fa-check"></i>
+                </div>
+                <div>
+                  <h3 class="text-xs font-bold text-slate-900">Streaming Range-Request HTTP 206</h3>
+                  <p class="text-xs text-slate-500">Mendukung pemutaran audio kajian MP3 dan video MP4 secara mulus tanpa download penuh.</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-3">
+                <div class="w-6 h-6 rounded-full bg-emerald-100 text-brand-primary flex items-center justify-center shrink-0 mt-0.5 text-xs">
+                  <i class="fa-solid fa-check"></i>
+                </div>
+                <div>
+                  <h3 class="text-xs font-bold text-slate-900">Direct Sync ke Google Drive Cloud Storage</h3>
+                  <p class="text-xs text-slate-500">Seluruh dokumen terintegrasi langsung dengan link resmi Google Drive berkecepatan tinggi.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-4">
+              <a href="E-Library_Pojac.html" 
+                 class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs transition">
+                <span>Buka Khazanah Lengkap</span>
+                <i class="fa-solid fa-arrow-right text-xs"></i>
+              </a>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- 7. ITFirm SECTION 11: CALL TO ACTION BANNER (HIGH-IMPACT RIBBON)          -->
+    <!-- ========================================================================= -->
+    <section class="py-16 bg-gradient-to-r from-slate-950 via-slate-900 to-emerald-950 text-white relative overflow-hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8 text-center lg:text-left">
+        <div class="space-y-2 max-w-2xl">
+          <span class="text-xs font-extrabold uppercase tracking-widest text-emerald-400">
+            SIAP MEMULAI PETUALANGAN LITERASI?
+          </span>
+          <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight">
+            Jelajahi <span id="stat-cta-total">34.089</span>+ Koleksi Tanpa Batasan Kapan Saja
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-300">
+            Tersedia pencarian interaktif, filter multi-bahasa, serta penampil bacaan Google Drive resmi.
+          </p>
+        </div>
+
+        <div class="shrink-0 flex flex-wrap gap-4 justify-center">
+          <a href="E-Library_Pojac.html" 
+             class="btn-itfirm-primary px-8 py-4 rounded-xl text-xs sm:text-sm font-extrabold text-white shadow-glow-primary">
+            Masuk ke Katalog Lengkap Sekarang ↗
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- 8. ITFirm SECTION 12: COUNTER / FUN FACTS (4 BIG STATS)                   -->
+    <!-- ========================================================================= -->
+    <section class="py-16 bg-white border-b border-slate-100">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div id="counter-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+
+          <div class="p-6 bg-slate-50 rounded-3xl border border-slate-100">
+            <div class="text-3xl sm:text-5xl font-black text-slate-900 mb-2" id="stat-counter-total">34.089</div>
+            <div class="text-xs font-bold text-slate-700 uppercase tracking-wide">Koleksi Terdaftar</div>
+            <p class="text-[11px] text-slate-400 mt-1">Kitab, e-book, dan audio resmi</p>
+          </div>
+
+          <div class="p-6 bg-slate-50 rounded-3xl border border-slate-100 admin-only" style="display:none">
+            <div class="text-3xl sm:text-5xl font-black text-brand-primary mb-2"><span id="stat-counter-gb">498,68</span> GB</div>
+            <div class="text-xs font-bold text-slate-700 uppercase tracking-wide">Kapasitas Cloud</div>
+            <p class="text-[11px] text-slate-400 mt-1">Google Drive Storage terintegrasi</p>
+          </div>
+
+          <div class="p-6 bg-slate-50 rounded-3xl border border-slate-100 admin-only" style="display:none">
+            <div class="text-3xl sm:text-5xl font-black text-cyan-600 mb-2" id="stat-counter-cats">25</div>
+            <div class="text-xs font-bold text-slate-700 uppercase tracking-wide">Disiplin Keilmuan</div>
+            <p class="text-[11px] text-slate-400 mt-1">Rumpun klasik hingga modern</p>
+          </div>
+
+          <div class="p-6 bg-slate-50 rounded-3xl border border-slate-100">
+            <div class="text-3xl sm:text-5xl font-black text-amber-500 mb-2">100%</div>
+            <div class="text-xs font-bold text-slate-700 uppercase tracking-wide">Bebas Akses</div>
+            <p class="text-[11px] text-slate-400 mt-1">Tanpa biaya &amp; tanpa paywall</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- 11. ITFirm MULTI-COLUMN SOPHISTICATED FOOTER                              -->
+  <!-- ========================================================================= -->
+  <footer class="bg-slate-950 text-slate-400 text-xs pt-16 pb-12 border-t border-slate-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 mb-12">
+        
+        <!-- Col 1: Brand Info -->
+        <div class="lg:col-span-4 space-y-4">
+          <div class="flex items-center gap-3">
+            <img src="assets/logo_pojak_square.png" alt="Logo POJAC" class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 p-1" onerror="this.src='assets/cover_pojak.jpg'">
+            <div>
+              <span class="text-xl font-black text-white">POJAC</span>
+              <p class="text-[11px] text-emerald-400 font-bold">Pojok Baca</p>
+            </div>
+          </div>
+          <p class="text-slate-400 leading-relaxed text-xs max-w-sm">
+            Platform perpustakaan digital terbuka generasi baru. Menghubungkan kedalaman naskah turath klasik pesantren dengan cakrawala kecerdasan buatan dan sains masa depan.
+          </p>
+          <div class="pt-2 text-[11px] text-slate-500 font-mono">
+            Est. 2024 • <span id="stat-footer-total">34.089</span> Koleksi Terdata
+          </div>
+        </div>
+
+        <!-- Col 2: Tautan Cepat -->
+        <div class="lg:col-span-2 space-y-2.5">
+          <h3 class="text-white font-bold text-sm mb-3">Tautan Cepat</h3>
+          <div><a href="index.html" class="hover:text-emerald-400 transition">Beranda</a></div>
+          <div><a href="#tentang" class="hover:text-emerald-400 transition">Tentang POJAC</a></div>
+          <div><a href="E-Library_Pojac.html" class="hover:text-amber-400 font-bold transition">Katalog Lengkap (34k+) ↗</a></div>
+          <div class="admin-only" style="display:none"><a href="editor.html" class="hover:text-emerald-400 transition">Editor Metadata</a></div>
+          <div class="admin-only" style="display:none"><a href="https://docs.google.com/spreadsheets/d/1_ObWupHQoo6bsDfFYGkOYu-vvmCAlIr1XmzSZmcgaA0/edit?gid=0#gid=0" target="_blank" rel="noopener noreferrer" class="hover:text-emerald-400 transition">Spreadsheet Master ↗</a></div>
+          <div class="admin-only" style="display:none"><a href="admin.html" class="hover:text-rose-400 transition">Gerbang Admin</a></div>
+        </div>
+
+        <!-- Col 3: Saluran Komunitas -->
+        <div class="lg:col-span-3 space-y-3">
+          <h3 class="text-white font-bold text-sm mb-3">Saluran Komunitas</h3>
+          <div class="space-y-2">
+            <a href="https://whatsapp.com/channel/0029Vb8HMxVBVJkvcrjbf80m" target="_blank" rel="noopener noreferrer" 
+               class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-800 hover:border-emerald-500/50 text-slate-300 hover:text-white transition group">
+              <div class="flex items-center gap-2.5">
+                <span class="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                  <i class="fa-brands fa-whatsapp text-sm"></i>
+                </span>
+                <span class="font-bold text-xs text-emerald-400 group-hover:text-emerald-300">Saluran WhatsApp POJAC</span>
+              </div>
+              <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-slate-500 group-hover:text-emerald-400 transition-colors"></i>
+            </a>
+
+            <a href="https://t.me/pojac_1" target="_blank" rel="noopener noreferrer" 
+               class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-900/90 hover:bg-slate-850 border border-slate-800 hover:border-sky-500/50 text-slate-300 hover:text-white transition group">
+              <div class="flex items-center gap-2.5">
+                <span class="w-7 h-7 rounded-lg bg-sky-500/10 border border-sky-500/30 text-sky-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                  <i class="fa-brands fa-telegram text-sm"></i>
+                </span>
+                <span class="font-bold text-xs text-sky-400 group-hover:text-sky-300">Saluran Telegram POJAC</span>
+              </div>
+              <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-slate-500 group-hover:text-sky-400 transition-colors"></i>
+            </a>
+          </div>
+          <p class="text-[11px] text-slate-500 pt-1">
+            Dapatkan informasi rilis berkas baru, audio murottal &amp; rekapan kajian harian.
+          </p>
+        </div>
+
+        <!-- Col 4: Sistem & Hosting -->
+        <div class="lg:col-span-3 space-y-2.5">
+          <h3 class="text-white font-bold text-sm mb-3">Infrastruktur Server</h3>
+          <p class="text-[11px] text-slate-400 leading-relaxed">
+            Beroperasi dengan Localhost Daemon (Port 8080) mandiri serta sinkronisasi langsung ke Google Drive Cloud Storage berkecepatan tinggi.
+          </p>
+          <div class="pt-2 flex items-center gap-2 text-[11px] text-slate-400">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span>Status: Online &amp; Terhubung Cloud</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bottom Line -->
+      <div class="pt-8 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500">
+        <div>
+          © 2024–2026 POJAC — Pojok Baca. Hak cipta terpelihara.
+        </div>
+        <div class="flex items-center gap-4">
+          <span>Koleksi Edisi Resmi</span>
+          <span>•</span>
+          <span>Wakaf Keilmuan Terbuka</span>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- 12. IN-PAGE MODAL PDF / DOCUMENT READER                                   -->
+  <!-- ========================================================================= -->
+  <div id="readerModal" class="hidden fixed inset-0 z-50 overflow-hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 animate-in fade-in duration-200">
+    <div class="relative w-full max-w-5xl h-[92vh] bg-slate-900 rounded-3xl border border-slate-700 shadow-2xl flex flex-col overflow-hidden">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between px-6 py-4 bg-slate-800/90 border-b border-slate-700 text-white shrink-0">
+        <div class="flex items-center gap-3 min-w-0 pr-4">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+          <div class="truncate">
+            <h4 class="font-bold text-sm truncate" id="modalBookTitle">Pratinjau Buku</h4>
+            <p class="text-[11px] text-slate-400 truncate" id="modalBookCategory">Kategori</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <a id="modalExternalLink" href="#" target="_blank" rel="noopener noreferrer"
+             class="px-3.5 py-1.5 rounded-xl bg-brand-primary hover:bg-brand-primaryDark text-white text-xs font-bold transition flex items-center gap-1.5">
+            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+            <span class="hidden sm:inline">Buka di Tab Baru</span>
+          </a>
+          <button onclick="closeReaderModal()" class="w-8 h-8 rounded-xl bg-slate-700 hover:bg-slate-600 text-slate-300 hover:text-white flex items-center justify-center transition" aria-label="Tutup jendela baca">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal Body (Iframe Google Drive Viewer) -->
+      <div class="flex-1 bg-slate-950 relative">
+        <div id="modalLoadingSpinner" class="absolute inset-0 flex flex-col items-center justify-center gap-3 text-slate-400 text-xs">
+          <i class="fa-solid fa-circle-notch fa-spin text-2xl text-emerald-400"></i>
+          <span>Menghubungkan ke Google Drive Cloud Viewer...</span>
+        </div>
+        <iframe id="modalIframe" src="" class="w-full h-full border-0 relative z-10" onload="document.getElementById('modalLoadingSpinner').style.display='none'"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 13. DATA SCRIPTS & LOGIC                                                  -->
+  <!-- ========================================================================= -->
+  <script src="config.js?v=2.2.0"></script>
+  <script src="assets/elegant-cover.js?v=2.3.0"></script>
+  <script src="catalog_data.js?v=2.2.0"></script>
+
+  <script>
+    let catalog = window.POJAK_CATALOG || { items: [], categories: [] };
+    let favorites = JSON.parse(localStorage.getItem('pojac_favorites') || '[]');
+
+    document.addEventListener('DOMContentLoaded', () => {
+      updateLiveStats();
+      initSearchPredictive();
+    });
+
+    // Mode gelap / terang — preferensi tersimpan di browser
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      try { localStorage.setItem('pojac_theme', isDark ? 'dark' : 'light'); } catch (e) { /* abaikan */ }
+    }
+
+    // ===== Dua Akses: Peserta Umum (default) & Super Admin =====
+    function isPojacAdmin() {
+      try { return localStorage.getItem('pojac_admin') === '1'; } catch (e) { return false; }
+    }
+    function logoutAdmin() {
+      try { localStorage.removeItem('pojac_admin'); } catch (e) { /* abaikan */ }
+      location.reload();
+    }
+    function applyAdminMode() {
+      const admin = isPojacAdmin();
+      document.querySelectorAll('.admin-only').forEach(el => { el.style.display = admin ? '' : 'none'; });
+      const trust = document.getElementById('hero-trust-grid');
+      if (trust) { trust.classList.toggle('grid-cols-2', !admin); trust.classList.toggle('grid-cols-3', admin); }
+      const counters = document.getElementById('counter-grid');
+      if (counters) { counters.classList.toggle('lg:grid-cols-2', !admin); counters.classList.toggle('lg:grid-cols-4', admin); }
+      document.documentElement.classList.toggle('admin', admin);
+    }
+    document.addEventListener('DOMContentLoaded', applyAdminMode);
+
+    // Statistik landing page dihitung live dari catalog_data.js agar selalu akurat
+    function formatId(num, decimals = 0) {
+      return num.toLocaleString('id-ID', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+    }
+
+    function updateLiveStats() {
+      if (!catalog || !Array.isArray(catalog.items) || catalog.items.length === 0) return;
+      const items = catalog.items;
+      const total = items.length;
+      const totalMb = items.reduce((s, b) => s + (Number(b[5]) || 0), 0);
+      const totalGb = totalMb / 1024;
+      const langs = catalog.languages || [];
+      const hiddenCats = (window.POJAK_CONFIG && window.POJAK_CONFIG.hiddenCategories) || [];
+      const visibleCats = (catalog.categories || []).filter(c => !hiddenCats.includes(c)).length;
+      const arabicIdx = langs.indexOf('Arab');
+      const pegonIdx = langs.indexOf('Pegon / Jawa');
+      const turath = items.filter(b => b[3] === arabicIdx || b[3] === pegonIdx).length;
+
+      const setText = (id, val) => { const el = document.getElementById(id); if (el) el.innerText = val; };
+      setText('stat-top-total', formatId(total));
+      setText('stat-top-gb', formatId(totalGb, 2));
+      setText('stat-hero-total', formatId(total) + '+');
+      setText('stat-hero-gb', formatId(totalGb, 2));
+      setText('stat-hero-turath', formatId(turath));
+      setText('stat-about-total', formatId(total) + '+');
+      setText('stat-about-cats', formatId(visibleCats));
+      setText('stat-cta-total', formatId(total));
+      setText('stat-counter-total', formatId(total) + '+');
+      setText('stat-counter-gb', formatId(totalGb, 2));
+      setText('stat-counter-cats', formatId(visibleCats));
+      setText('stat-footer-total', formatId(total) + '+');
+    }
+
+    // 1. Predictive Autocomplete Search
+    function initSearchPredictive() {
+      const input = document.getElementById('navbarSearchInput');
+      const clearBtn = document.getElementById('navbarSearchClear');
+      const box = document.getElementById('suggestionsBox');
+      const list = document.getElementById('suggestionsList');
+      const countBadge = document.getElementById('suggestCountBadge');
+      const viewAllBtn = document.getElementById('btnViewAllSearch');
+
+      if (!input || !box || !list) return;
+
+      input.addEventListener('input', () => {
+        const query = input.value.trim().toLowerCase();
+        if (query.length > 0) {
+          clearBtn?.classList.remove('hidden');
+
+          if (!catalog.items || catalog.items.length === 0) return;
+
+          const matches = [];
+          for (let i = 0; i < catalog.items.length; i++) {
+            const item = catalog.items[i];
+            const title = String(item[0] || '').toLowerCase();
+            const cat = String(item[7] || '').toLowerCase();
+            if (title.includes(query) || cat.includes(query)) {
+              matches.push(item);
+              if (matches.length >= 7) break;
+            }
+          }
+
+          if (matches.length > 0) {
+            window.__lastSugMatches = matches;
+            box.classList.remove('hidden');
+            countBadge.innerText = `${matches.length} judul teratas`;
+            viewAllBtn.href = `E-Library_Pojac.html?q=${encodeURIComponent(query)}`;
+
+            list.innerHTML = matches.map((item, mi) => {
+              const safeTitle = escapeHtml(item[0]);
+              const safeCat = escapeHtml((catalog.categories && catalog.categories[item[1]]) || 'Umum');
+              const gdriveId = item[6];
+              return `
+                <div class="p-3 hover:bg-slate-50 transition flex items-center justify-between gap-3 cursor-pointer"
+                     onclick="openReaderModal('${safeTitle.replace(/'/g, "\\'")}', '${safeCat.replace(/'/g, "\\'")}', '${gdriveId}')">
+                  <div class="flex items-center gap-2.5 min-w-0">
+                    <div class="w-8 h-10 rounded bg-slate-100 border border-slate-200 shrink-0 overflow-hidden">
+                      <img data-sug-idx="${mi}" referrerpolicy="no-referrer" loading="lazy" class="w-full h-full object-cover"
+                           src="https://drive.google.com/thumbnail?id=${gdriveId}&sz=w400"
+                           onerror="sugCoverError(this)">
+                    </div>
+                    <div class="min-w-0">
+                      <div class="font-bold text-slate-800 truncate">${safeTitle}</div>
+                      <div class="text-[10px] text-slate-400 truncate">${safeCat} • ${item[4] || 'PDF'}</div>
+                    </div>
+                  </div>
+                  <button class="shrink-0 px-2.5 py-1 rounded-lg bg-emerald-100 hover:bg-emerald-200 text-emerald-800 text-[10px] font-bold transition">
+                    Baca
+                  </button>
+                </div>
+              `;
+            }).join('');
+          } else {
+            box.classList.remove('hidden');
+            countBadge.innerText = `0 ditemukan`;
+            list.innerHTML = `<div class="p-4 text-center text-slate-400">Tidak ada judul yang cocok dengan "${escapeHtml(query)}"</div>`;
+          }
+
+          // Format tanpa preview dokumen: langsung pakai sampul elegan generatif
+          if (window.POJAC_COVER) {
+            list.querySelectorAll('img[data-sug-idx]').forEach(im => {
+              const it = matches[Number(im.dataset.sugIdx)];
+              if (it && POJAC_COVER.noPreview(it[4])) {
+                im.onerror = null;
+                im.src = 'assets/cover_pojak.jpg';
+                POJAC_COVER.generate(it, catalog.categories).then(url => {
+                  if (im.isConnected) im.src = url;
+                }).catch(() => {});
+              }
+            });
+          }
+        } else {
+          clearBtn?.classList.add('hidden');
+          box.classList.add('hidden');
+        }
+      });
+
+      clearBtn?.addEventListener('click', () => {
+        input.value = '';
+        clearBtn.classList.add('hidden');
+        box.classList.add('hidden');
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!box.contains(e.target) && !input.contains(e.target)) {
+          box.classList.add('hidden');
+        }
+      });
+    }
+
+    function handleNavSearch(event) {
+      event.preventDefault();
+      const input = document.getElementById('navbarSearchInput');
+      const q = input?.value.trim();
+      if (q) {
+        window.location.href = `E-Library_Pojac.html?q=${encodeURIComponent(q)}`;
+      } else {
+        window.location.href = `E-Library_Pojac.html`;
+      }
+    }
+
+    // Thumbnail gagal pada saran pencarian -> sampul elegan generatif
+    function sugCoverError(img) {
+      img.onerror = null;
+      const it = null;
+      if (!window.POJAC_COVER) { img.src = 'assets/cover_pojak.jpg'; return; }
+      const matches = window.__lastSugMatches || [];
+      const item = matches[Number(img.dataset.sugIdx)];
+      if (!item) { img.src = 'assets/cover_pojak.jpg'; return; }
+      POJAC_COVER.generate(item, catalog.categories).then(url => {
+        if (img.isConnected) img.src = url;
+      }).catch(() => { img.src = 'assets/cover_pojak.jpg'; });
+    }
+
+
+
+    // 4. In-Page PDF Reader Modal Controls
+    function openReaderModal(title, category, gdriveId) {
+      if (!gdriveId) {
+        alert("Berkas ini belum memiliki ID Google Drive resmi.");
+        return;
+      }
+      const modal = document.getElementById('readerModal');
+      const titleEl = document.getElementById('modalBookTitle');
+      const catEl = document.getElementById('modalBookCategory');
+      const iframe = document.getElementById('modalIframe');
+      const extBtn = document.getElementById('modalExternalLink');
+      const spinner = document.getElementById('modalLoadingSpinner');
+
+      const previewUrl = `https://drive.google.com/file/d/${gdriveId}/preview`;
+
+      titleEl.innerText = title;
+      catEl.innerText = category;
+      extBtn.href = `https://drive.google.com/file/d/${gdriveId}/view`;
+      
+      spinner.style.display = 'flex';
+      iframe.src = previewUrl;
+
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeReaderModal() {
+      const modal = document.getElementById('readerModal');
+      const iframe = document.getElementById('modalIframe');
+      iframe.src = '';
+      modal.classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeReaderModal();
+    });
+
+
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+  </script>
+
+</body>
+</html>

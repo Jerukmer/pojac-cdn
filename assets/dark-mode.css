@@ -1,0 +1,114 @@
+/* =============================================================================
+   POJAC E-LIBRARY — MODE GELAP (SHARED DARK THEME)
+   Aktif ketika <html> memiliki class "dark". Dipakai bersama oleh
+   index.html (landing) dan E-Library_Pojac.html (katalog).
+   Strategi: pemetaan ulang utilitas Tailwind utama ke permukaan gelap,
+   tanpa mengubah data/struktur HTML.
+   ============================================================================= */
+
+/* --- Permukaan utama --- */
+html.dark body {
+  background-color: #0b1220;
+  color: #d7dde7;
+}
+html.dark .bg-white { background-color: #101827; }
+html.dark .bg-white\/95 { background-color: rgba(13, 20, 33, 0.93); }
+html.dark .bg-slate-50 { background-color: #0d1526; }
+html.dark .bg-slate-100 { background-color: #1c2740; }
+html.dark .bg-slate-100\/80 { background-color: #1c2740; }
+
+/* --- Garis & pembatas --- */
+html.dark .border-slate-100 { border-color: #1c2740; }
+html.dark .border-slate-200,
+html.dark .border-slate-200\/90,
+html.dark .border-slate-200\/80,
+html.dark .border-slate-200\/70 { border-color: #243050; }
+html.dark .border-slate-300,
+html.dark .border-slate-300\/80 { border-color: #33415e; }
+html.dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]) { border-color: #1c2740; }
+
+/* --- Teks --- */
+html.dark .text-slate-900 { color: #eef2f8; }
+html.dark .text-slate-800 { color: #dde4ee; }
+html.dark .text-slate-700 { color: #c3cddb; }
+html.dark .text-slate-600 { color: #a8b4c6; }
+html.dark .text-slate-500 { color: #8d9ab0; }
+html.dark .text-slate-400 { color: #76839a; }
+html.dark .text-slate-300 { color: #64748b; } /* hanya dipakai pada elemen terang */
+html.dark .text-slate-950 { color: #eef2f8; }
+
+/* --- Hover halus --- */
+html.dark .hover\:bg-slate-50:hover { background-color: #141d33; }
+html.dark .hover\:bg-slate-100:hover { background-color: #1c2740; }
+html.dark .hover\:bg-slate-200:hover { background-color: #243050; }
+html.dark .hover\:bg-slate-850:hover { background-color: #141d33; }
+html.dark .hover\:bg-slate-900:hover { background-color: #1e293b; }
+
+/* --- Input & select --- */
+html.dark input:not([type="radio"]):not([type="checkbox"]),
+html.dark select,
+html.dark textarea {
+  background-color: #0d1526;
+  border-color: #243050;
+  color: #e2e8f0;
+}
+html.dark input:not([type="radio"]):not([type="checkbox"]):focus,
+html.dark select:focus,
+html.dark textarea:focus {
+  background-color: #0d1526;
+}
+html.dark input::placeholder, html.dark textarea::placeholder { color: #5b6b85; }
+
+/* --- Baris terpilih pada panel filter (radio tercentang) --- */
+html.dark label:has(input[type="radio"]:checked) {
+  background-color: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.35);
+}
+
+/* --- Kotak ikon & badge lembut menjadi tint transparan --- */
+html.dark .bg-brand-50 { background-color: rgba(2, 132, 199, 0.16); }
+html.dark .bg-emerald-50 { background-color: rgba(16, 185, 129, 0.12); }
+html.dark .bg-emerald-50\/60 { background-color: rgba(16, 185, 129, 0.12); }
+html.dark .bg-indigo-50 { background-color: rgba(99, 102, 241, 0.16); }
+html.dark .bg-amber-50 { background-color: rgba(245, 158, 11, 0.14); }
+html.dark .bg-emerald-100 { background-color: rgba(16, 185, 129, 0.16); }
+html.dark .bg-emerald-100\/60 { background-color: rgba(16, 185, 129, 0.14); }
+html.dark .bg-brand-100 { background-color: rgba(2, 132, 199, 0.18); }
+html.dark .bg-amber-100 { background-color: rgba(245, 158, 11, 0.16); }
+html.dark .bg-blue-100 { background-color: rgba(59, 130, 246, 0.16); }
+html.dark .bg-teal-100 { background-color: rgba(20, 184, 166, 0.16); }
+html.dark .bg-sky-100 { background-color: rgba(14, 165, 233, 0.16); }
+html.dark .bg-rose-100 { background-color: rgba(244, 63, 94, 0.16); }
+html.dark .text-emerald-800 { color: #6ee7b7; }
+html.dark .text-brand-800 { color: #7dd3fc; }
+html.dark .text-amber-800 { color: #fcd34d; }
+html.dark .text-blue-800 { color: #93c5fd; }
+html.dark .text-teal-700 { color: #5eead4; }
+html.dark .text-indigo-700 { color: #a5b4fc; }
+html.dark .text-sky-700, html.dark .text-sky-900 { color: #7dd3fc; }
+html.dark .text-rose-700 { color: #fda4af; }
+html.dark .text-amber-600 { color: #fbbf24; }
+html.dark .text-emerald-900 { color: #a7f3d0; }
+
+/* --- Tabel katalog --- */
+html.dark thead.bg-slate-900 { background-color: #0d1526; }
+html.dark tbody tr.hover\:bg-slate-50:hover { background-color: #141d33; }
+
+/* --- Kartu buku: bingkai cover & tombol sekunder --- */
+html.dark .bg-slate-900\/60 { background-color: rgba(2, 6, 17, 0.65); }
+html.dark .bg-slate-900\/90 { background-color: rgba(2, 6, 17, 0.9); }
+
+/* --- Scrollbar gelap --- */
+html.dark ::-webkit-scrollbar-track { background: #0d1526; }
+html.dark ::-webkit-scrollbar-thumb { background: #2c3a57; }
+html.dark ::-webkit-scrollbar-thumb:hover { background: #3b4c70; }
+
+/* --- Transisi halus saat beralih tema --- */
+html.dark body, html.dark .bg-white, html.dark .bg-slate-50, html.dark .bg-slate-100,
+html.dark .border-slate-200, html.dark .border-slate-100 {
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+
+/* --- Kartu statistik About (cover portrait) --- */
+html.dark .border-emerald-200\/70 { border-color: rgba(16, 185, 129, 0.28); }
+html.dark .ring-slate-900\/10 { --tw-ring-color: rgba(148, 163, 184, 0.18); }

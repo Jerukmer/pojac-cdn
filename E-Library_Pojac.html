@@ -1,0 +1,1673 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>POJAC E-Library — Katalog Digital Pojok Baca</title>
+  <meta name="description" content="Katalog digital 34.000+ koleksi kitab kuning, e-book, audio kajian & literatur modern POJAC (Pojok Baca).">
+  <link rel="icon" type="image/png" href="assets/logo_pojak_square.png">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#F0F9FF',
+              100: '#E0F2FE',
+              500: '#0284C7',
+              600: '#0369A1',
+              700: '#075985',
+              800: '#0C4A6E',
+              900: '#0B132B',
+              950: '#070D1F'
+            },
+            gold: {
+              400: '#FBBF24',
+              500: '#F59E0B',
+              600: '#D97706',
+              700: '#B45309'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+            arabic: ['"Amiri"', '"Traditional Arabic"', 'serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Mode gelap: terapkan preferensi tersimpan sebelum render (anti-kilat putih) -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('pojac_theme');
+        if (t === 'dark' || (!t && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        }
+      } catch (e) { /* abaikan */ }
+    })();
+  </script>
+  <link rel="stylesheet" href="assets/dark-mode.css?v=2.3.0">
+
+  <!-- Google Fonts: Plus Jakarta Sans & Amiri -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+
+  <style>
+    /* Styling scrollbar */
+    ::-webkit-scrollbar { width: 7px; height: 7px; }
+    ::-webkit-scrollbar-track { background: #F1F5F9; }
+    ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+
+    .arabic-title {
+      font-family: 'Amiri', serif;
+      font-size: 1.12rem;
+      line-height: 1.75rem;
+      direction: rtl;
+      text-align: right;
+    }
+
+    /* Book cover 3D spine and shine effect */
+    .book-cover-frame {
+      box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.12), -2px 0 6px rgba(0, 0, 0, 0.08);
+      position: relative;
+    }
+    .book-spine-line {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 6px;
+      background: linear-gradient(to right, rgba(0,0,0,0.35), rgba(255,255,255,0.15), rgba(0,0,0,0.2));
+      z-index: 10;
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex flex-col font-sans overflow-x-hidden">
+
+  <!-- TOP STATUS & ACCESS BAR (FULL DESKTOP) -->
+  <div class="bg-slate-900 text-slate-300 text-xs px-6 py-2 border-b border-slate-800 flex flex-wrap justify-between items-center gap-2">
+    <div class="flex items-center space-x-3">
+      <span id="server-status-pill" class="inline-flex items-center gap-1.5 font-medium text-emerald-400">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        Sistem Siap (File Mode)
+      </span>
+      <span class="text-slate-600">•</span>
+      <span>Total Koleksi: <strong class="text-white">34.089</strong> Berkas</span>
+      <span class="text-slate-600 admin-only" style="display:none">•</span>
+      <span class="admin-only" style="display:none">Kapasitas Cloud: <strong class="text-white">498,68 GB</strong></span>
+      <span class="text-slate-600 admin-only" style="display:none">•</span>
+      <span class="admin-only" style="display:none">Thumbnail: <strong class="text-amber-300">Cover GDrive + Sampul Elegan Generatif</strong></span>
+    </div>
+    <div class="flex items-center space-x-3.5">
+      <span class="admin-only inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-500/10 border border-amber-500/30 text-amber-300 font-bold" style="display:none">👑 Mode Admin</span>
+      <button onclick="logoutAdmin()" class="admin-only hover:text-rose-400 font-semibold transition" style="display:none">Keluar</button>
+      <span class="admin-only text-slate-700" style="display:none">|</span>
+      <a href="editor.html" class="admin-only text-slate-300 hover:text-amber-300 flex items-center space-x-1 font-semibold transition" style="display:none">
+        <span>⚙️ Editor Data</span>
+      </a>
+      <span class="admin-only text-slate-700" style="display:none">|</span>
+      <a href="https://docs.google.com/spreadsheets/d/1_ObWupHQoo6bsDfFYGkOYu-vvmCAlIr1XmzSZmcgaA0/edit?gid=0#gid=0" target="_blank"
+        class="admin-only text-slate-300 hover:text-amber-300 flex items-center space-x-1 font-semibold transition" style="display:none">
+        <span>Buka Google Spreadsheet Master ↗</span>
+      </a>
+      <span class="text-slate-700">|</span>
+      <button onclick="openFavoritesModal()" class="hover:text-amber-300 flex items-center space-x-1 font-semibold transition">
+        <span>⭐ Buku Favorit (<span id="fav-count">0</span>)</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- HEADER UTAMA (FULL DESKTOP) -->
+  <header class="bg-white border-b border-slate-200/90 sticky top-0 z-40 shadow-xs">
+    <div class="w-full px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+
+      <!-- Logo & Identitas Resmi Pojac -->
+      <div class="flex items-center space-x-2.5 sm:space-x-3.5 min-w-0">
+        <img src="assets/logo_pojak_square.png" alt="Logo POJAC"
+          class="w-10 h-10 sm:w-11 sm:h-11 object-contain rounded-xl shadow-xs border border-slate-200/80 bg-white p-0.5 shrink-0">
+        <div class="min-w-0">
+          <div class="flex items-center gap-2">
+            <span class="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight truncate">POJAC E-LIBRARY</span>
+            <span class="hidden sm:inline-block text-[10px] font-bold uppercase tracking-wider bg-slate-900 text-amber-300 px-2.5 py-0.5 rounded-md shadow-xs">
+              Visual Edition
+            </span>
+          </div>
+          <p class="hidden sm:block text-xs text-slate-500 font-medium truncate max-w-[300px] lg:max-w-none">Katalog Lengkap Cover Buku, Kitab Kuning Arab & Referensi Digital</p>
+        </div>
+      </div>
+
+      <!-- Bilah Pencarian Cepat Global (Lebar & Responsif) -->
+      <div class="order-last w-full sm:order-none sm:w-auto sm:flex-1 sm:max-w-3xl relative">
+        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        </div>
+        <input type="text" id="search-input" 
+          placeholder="Cari judul buku, topik keilmuan, teks Arab, atau nomor jilid... (Tekan / untuk mencari)"
+          class="w-full pl-10 pr-10 py-2.5 text-sm bg-slate-50 hover:bg-slate-100/80 focus:bg-white border border-slate-300/80 focus:border-brand-600 rounded-xl focus:outline-none focus:ring-4 focus:ring-brand-500/10 transition shadow-inner font-medium">
+        <button id="clear-search-btn" onclick="clearSearch()" class="hidden absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <!-- Tombol Switcher Mode Tampilan & Beranda -->
+      <div class="flex items-center space-x-1.5 sm:space-x-2.5 shrink-0">
+        <a href="index.html" class="px-2.5 sm:px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-brand-600 text-white font-bold text-xs transition flex items-center gap-1.5 shadow-2xs border border-slate-800" title="Kembali ke Halaman Utama POJAC">
+          <svg class="w-4 h-4 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+          <span class="hidden sm:inline">Beranda POJAC</span>
+        </a>
+
+        <div class="bg-slate-100 p-1 rounded-xl flex items-center border border-slate-200 text-xs font-semibold">
+          <button id="view-grid-btn" onclick="setViewMode('grid')" class="px-2 sm:px-3 py-1.5 rounded-lg bg-white text-slate-900 shadow-xs transition flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+            <span class="hidden md:inline">Galeri Cover</span>
+          </button>
+          <button id="view-table-btn" onclick="setViewMode('table')" class="px-2 sm:px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            <span class="hidden md:inline">Tabel Ringkas</span>
+          </button>
+        </div>
+
+        <!-- Tombol Mode Gelap / Terang -->
+        <button onclick="toggleTheme()" title="Mode Gelap / Terang" class="w-9 h-9 rounded-xl bg-slate-100 border border-slate-200 text-slate-600 hover:text-slate-900 flex items-center justify-center transition">
+          <svg class="w-4 h-4 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+          <svg class="w-4 h-4 hidden dark:inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- WORKSPACE UTAMA: FULL DESKTOP 2-KOLOM -->
+  <div class="w-full px-6 lg:px-8 py-5 flex-1 flex gap-6">
+
+    <!-- KOLOM KIRI: PANEL FILTER (STICKY / DRAWER DI MOBILE) -->
+    <aside id="filter-sidebar" class="hidden lg:block w-full lg:w-80 shrink-0 space-y-4">
+
+      <!-- Kartu Filter Kategori / Genre -->
+      <div class="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-xs">
+        <div class="flex items-center justify-between mb-2.5">
+          <h2 class="text-xs font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+            Kategori / Genre
+          </h2>
+          <button onclick="resetCategory()" class="text-xs text-brand-600 hover:text-brand-800 font-bold">Semua</button>
+        </div>
+        <input type="text" id="cat-search-input" placeholder="Saring nama genre..." 
+          class="w-full mb-2 px-2.5 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-brand-500 font-medium">
+        <div class="space-y-1 max-h-56 overflow-y-auto pr-1 text-xs" id="category-list">
+          <div class="text-slate-400 py-3 text-center text-xs">Memuat daftar kategori...</div>
+        </div>
+      </div>
+
+      <!-- Kartu Filter Bahasa -->
+      <div class="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-xs">
+        <h2 class="text-xs font-bold text-slate-600 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path></svg>
+          Klasifikasi Bahasa
+        </h2>
+        <div class="space-y-1 text-xs">
+          <label class="flex items-center justify-between p-2 rounded-xl hover:bg-slate-50 cursor-pointer border border-transparent has-[:checked]:border-emerald-200 has-[:checked]:bg-emerald-50/60 transition">
+            <span class="flex items-center gap-2">
+              <input type="radio" name="lang-filter" value="" checked onchange="onFilterChange()" class="text-emerald-600 focus:ring-emerald-500">
+              <span class="font-medium text-slate-700">Semua Bahasa</span>
+            </span>
+            <span id="langcount-all" class="text-[11px] font-semibold font-mono bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">34.089</span>
+          </label>
+          <label class="flex items-center justify-between p-2 rounded-xl hover:bg-slate-50 cursor-pointer border border-transparent has-[:checked]:border-emerald-200 has-[:checked]:bg-emerald-50/60 transition">
+            <span class="flex items-center gap-2">
+              <input type="radio" name="lang-filter" value="Arab" onchange="onFilterChange()" class="text-emerald-600 focus:ring-emerald-500">
+              <span class="font-medium text-slate-700">Bahasa Arab Asli</span>
+            </span>
+            <span id="langcount-arab" class="text-[11px] font-semibold font-mono bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">5.298</span>
+          </label>
+          <label class="flex items-center justify-between p-2 rounded-xl hover:bg-slate-50 cursor-pointer border border-transparent has-[:checked]:border-emerald-200 has-[:checked]:bg-emerald-50/60 transition">
+            <span class="flex items-center gap-2">
+              <input type="radio" name="lang-filter" value="Indonesia" onchange="onFilterChange()" class="text-emerald-600 focus:ring-emerald-500">
+              <span class="font-medium text-slate-700">Bahasa Indonesia</span>
+            </span>
+            <span id="langcount-id" class="text-[11px] font-semibold font-mono bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">27.351</span>
+          </label>
+          <label class="flex items-center justify-between p-2 rounded-xl hover:bg-slate-50 cursor-pointer border border-transparent has-[:checked]:border-emerald-200 has-[:checked]:bg-emerald-50/60 transition">
+            <span class="flex items-center gap-2">
+              <input type="radio" name="lang-filter" value="Terjemahan (Arab - ID)" onchange="onFilterChange()" class="text-emerald-600 focus:ring-emerald-500">
+              <span class="font-medium text-slate-700">Terjemahan Arab - ID</span>
+            </span>
+            <span id="langcount-tr" class="text-[11px] font-semibold font-mono bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">950</span>
+          </label>
+          <label class="flex items-center justify-between p-2 rounded-xl hover:bg-slate-50 cursor-pointer border border-transparent has-[:checked]:border-emerald-200 has-[:checked]:bg-emerald-50/60 transition">
+            <span class="flex items-center gap-2">
+              <input type="radio" name="lang-filter" value="Pegon / Jawa" onchange="onFilterChange()" class="text-emerald-600 focus:ring-emerald-500">
+              <span class="font-medium text-slate-700">Kitab Pegon (Petuk)</span>
+            </span>
+            <span id="langcount-pg" class="text-[11px] font-semibold font-mono bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">143</span>
+          </label>
+          <label class="flex items-center justify-between p-2 rounded-xl hover:bg-slate-50 cursor-pointer border border-transparent has-[:checked]:border-emerald-200 has-[:checked]:bg-emerald-50/60 transition">
+            <span class="flex items-center gap-2">
+              <input type="radio" name="lang-filter" value="Inggris" onchange="onFilterChange()" class="text-emerald-600 focus:ring-emerald-500">
+              <span class="font-medium text-slate-700">Bahasa Inggris</span>
+            </span>
+            <span id="langcount-en" class="text-[11px] font-semibold font-mono bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">347</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Kartu Filter Teknis & Pengurutan -->
+      <div class="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-xs space-y-3.5">
+        <div>
+          <label class="text-xs font-bold text-slate-600 uppercase tracking-wider block mb-1.5">Format Berkas</label>
+          <select id="format-filter" onchange="onFilterChange()" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none font-medium">
+            <option value="">Semua Format File</option>
+            <!-- Opsi format dibangun dinamis dari data oleh buildFormatFilter() -->
+          </select>
+        </div>
+
+        <div>
+          <label class="text-xs font-bold text-slate-600 uppercase tracking-wider block mb-1.5">Status Jilid / Volume</label>
+          <select id="volume-filter" onchange="onFilterChange()" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none font-medium">
+            <option value="">Semua Berkas</option>
+            <option value="multi">📚 Kitab Berjilid Saja (3.751 jilid)</option>
+            <option value="single">📄 Naskah Tunggal (30.338 berkas)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="text-xs font-bold text-slate-600 uppercase tracking-wider block mb-1.5">Pengurutan Data</label>
+          <select id="sort-filter" onchange="onFilterChange()" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none font-medium">
+            <option value="title-asc">Judul Buku (A → Z)</option>
+            <option value="title-desc">Judul Buku (Z → A)</option>
+            <option value="pop-desc">🔥 Terpopuler (Sering Dibuka)</option>
+            <option value="size-desc">Ukuran Berkas (Terbesar)</option>
+            <option value="size-asc">Ukuran Berkas (Terkecil)</option>
+            <option value="cat-asc">Kategori / Disiplin Ilmu</option>
+          </select>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- KOLOM KANAN: AREA UTAMA (FLUID 100% DESKTOP) -->
+    <main class="flex-1 flex flex-col min-w-0">
+
+      <!-- BANNER METRIK STATISTIK -->
+      <div id="statx-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+        <div class="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-xs flex items-center space-x-3.5">
+          <div class="w-12 h-12 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+          </div>
+          <div>
+            <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Koleksi</div>
+            <div class="text-xl font-extrabold text-slate-900 font-mono"><span id="statx-total">34.089</span> <span class="text-xs font-semibold text-slate-500 font-sans">Berkas</span></div>
+          </div>
+        </div>
+
+        <div class="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-xs flex items-center space-x-3.5 admin-only" style="display:none">
+          <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg>
+          </div>
+          <div>
+            <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Kapasitas Cloud</div>
+            <div class="text-xl font-extrabold text-slate-900 font-mono"><span id="statx-gb">498,68</span> <span class="text-xs font-semibold text-slate-500 font-sans">GB</span></div>
+          </div>
+        </div>
+
+        <div class="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-xs flex items-center space-x-3.5">
+          <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+          </div>
+          <div>
+            <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Disiplin Ilmu</div>
+            <div class="text-xl font-extrabold text-slate-900 font-mono"><span id="statx-cats">23</span> <span class="text-xs font-semibold text-slate-500 font-sans">Kategori</span></div>
+          </div>
+        </div>
+
+        <div class="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-xs flex items-center space-x-3.5">
+          <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+          </div>
+          <div>
+            <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Kitab Bahasa Arab</div>
+            <div class="text-xl font-extrabold text-slate-900 font-mono"><span id="statx-arab">5.298</span> <span class="text-xs font-semibold text-slate-500 font-sans">Kitab</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STATUS & FILTER AKTIF TOOLBAR -->
+      <div class="bg-white px-5 py-3 rounded-2xl border border-slate-200/90 shadow-xs mb-4 flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="text-slate-500 font-medium">Status Penelusuran:</span>
+          <span id="results-count" class="font-bold text-slate-900 text-sm">Memuat koleksi...</span>
+          <span id="active-cat-badge" class="hidden px-2.5 py-0.5 rounded-lg bg-brand-50 text-brand-800 font-semibold border border-brand-200"></span>
+          <span id="active-lang-badge" class="hidden px-2.5 py-0.5 rounded-lg bg-emerald-50 text-emerald-800 font-semibold border border-emerald-200"></span>
+          <span id="active-fmt-badge" class="hidden px-2.5 py-0.5 rounded-lg bg-purple-50 text-purple-800 font-semibold border border-purple-200"></span>
+          <button id="reset-all-filters-btn" onclick="resetAllFilters()" class="hidden text-brand-600 hover:text-brand-800 font-bold underline ml-1">
+            Reset Filter
+          </button>
+        </div>
+
+        <div class="flex items-center space-x-2">
+          <button id="filter-toggle-btn" onclick="toggleFilterSidebar()" class="lg:hidden px-3 py-1.5 rounded-lg bg-slate-900 text-white font-bold flex items-center gap-1.5 transition">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
+            <span>Filter</span>
+          </button>
+          <label class="text-slate-500 font-medium">Tampilkan per halaman:</label>
+          <select id="page-size" onchange="changePageSize()" class="bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 font-semibold focus:outline-none focus:ring-1 focus:ring-brand-500">
+            <option value="auto" selected>✨ Otomatis Penuh (Auto-Row)</option>
+            <option value="25">25 buku (5 baris)</option>
+            <option value="50">50 buku (10 baris)</option>
+            <option value="60">60 buku (Universal Full)</option>
+            <option value="100">100 buku (20 baris)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- KONTAINER HASIL BUKU (FULL DESKTOP GALLERY GRID / TABLE) -->
+      <div id="books-container" class="min-h-[450px]">
+        <!-- Injected via JavaScript -->
+      </div>
+
+      <!-- BILAH PAGINASI -->
+      <div class="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 bg-white px-5 py-3.5 rounded-2xl border border-slate-200/90 shadow-xs text-xs">
+        <div class="text-slate-600 font-medium" id="pagination-info">
+          Menampilkan 0 - 0 dari 0 berkas
+        </div>
+        <div class="flex items-center space-x-1" id="pagination-buttons">
+          <!-- Tombol halaman -->
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- MODAL DETAIL BUKU BESERTA PREVIEW THUMBNAIL BESAR -->
+  <div id="detail-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-3xl w-full p-6 shadow-2xl border border-slate-200 overflow-hidden transform transition-all max-h-[90vh] flex flex-col">
+      <div class="flex items-start justify-between pb-4 border-b border-slate-100">
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span id="modal-cat-badge" class="text-[10px] font-bold uppercase tracking-wider bg-brand-100 text-brand-800 px-2.5 py-0.5 rounded-md">Kategori</span>
+            <span id="modal-lang-badge" class="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-md">Bahasa</span>
+          </div>
+          <h3 id="modal-title" class="text-lg font-bold text-slate-900 line-clamp-2 leading-snug">Judul Buku</h3>
+        </div>
+        <button onclick="closeDetailModal()" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition shrink-0">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <div class="py-4 space-y-4 text-xs overflow-y-auto flex-1">
+        <div class="flex flex-col sm:flex-row gap-5 items-start">
+          <!-- Preview Cover Besar di Modal -->
+          <div class="w-full sm:w-48 h-64 shrink-0 rounded-2xl overflow-hidden bg-slate-900 shadow-md book-cover-frame border border-slate-200/80 relative">
+            <div class="book-spine-line"></div>
+            <img id="modal-cover-img" src="" alt="Cover Buku" class="w-full h-full object-cover object-top">
+          </div>
+
+          <!-- Rincian Informasi -->
+          <div class="flex-1 space-y-3 w-full">
+            <div class="grid grid-cols-2 gap-2.5 bg-slate-50 p-3.5 rounded-2xl border border-slate-100">
+              <div>
+                <span class="text-slate-400 block font-medium">Bahasa</span>
+                <span id="modal-lang" class="font-bold text-slate-800">Bahasa Indonesia</span>
+              </div>
+              <div>
+                <span class="text-slate-400 block font-medium">Status Jilid</span>
+                <span id="modal-vol" class="font-bold text-slate-800">Tunggal (-)</span>
+              </div>
+              <div>
+                <span class="text-slate-400 block font-medium">Format</span>
+                <span id="modal-fmt" class="font-bold text-slate-800">PDF</span>
+              </div>
+              <div>
+                <span class="text-slate-400 block font-medium">Ukuran</span>
+                <span id="modal-size" class="font-bold text-slate-800">12,50 MB</span>
+              </div>
+            </div>
+
+            <div>
+              <span class="text-slate-500 block font-semibold mb-1">Lokasi Folder di Google Drive:</span>
+              <div id="modal-path" class="bg-slate-100/80 p-2.5 rounded-xl font-mono text-[11px] text-slate-700 break-all select-all border border-slate-200/80">
+                Koleksi Kitab / Folder / Subfolder
+              </div>
+            </div>
+
+            <div>
+              <span class="text-slate-500 block font-semibold mb-1">Tautan Langsung Google Drive:</span>
+              <div class="flex items-center space-x-2">
+                <input type="text" id="modal-link-input" readonly 
+                  class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-[11px] font-mono text-slate-700 select-all focus:outline-none">
+                <button onclick="copyModalLink()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3.5 py-2 rounded-xl font-bold transition shrink-0">
+                  📋 Salin
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+        <!-- Tombol cari cover di internet jika ingin melihat varian lain -->
+        <a id="modal-google-img-btn" href="#" target="_blank" class="text-sky-700 hover:text-sky-900 font-semibold text-xs flex items-center gap-1 transition">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          <span>Cari Varian Cover di Internet ↗</span>
+        </a>
+
+        <div class="flex items-center space-x-2.5">
+          <button onclick="openQrModal()" title="QR Code untuk dibuka di HP" class="px-4 py-2 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12v4m0-8V4m0 4h4M4 8h4.01M20 8h-4M4 20h4v-4m6-4v.01M4 16v4h4"></path></svg>
+            <span class="hidden sm:inline">QR</span>
+          </button>
+          <button onclick="openReadModal()" class="px-4 py-2 text-xs font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-xl transition flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+            <span>Baca Langsung</span>
+          </button>
+          <button onclick="closeDetailModal()" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition">
+            Tutup
+          </button>
+          <a id="modal-drive-btn" href="#" target="_blank" 
+            class="px-5 py-2 text-xs font-bold text-white bg-slate-900 hover:bg-brand-700 rounded-xl shadow-md transition flex items-center gap-1.5">
+            <span>Buka di Google Drive</span>
+            <svg class="w-3.5 h-3.5 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL FAVORIT -->
+  <div id="fav-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl border border-slate-200 max-h-[80vh] flex flex-col">
+      <div class="flex items-center justify-between pb-3.5 border-b border-slate-100">
+        <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+          <span>⭐ Daftar Buku Favorit</span>
+          <span id="fav-modal-count" class="text-xs bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded-full font-bold">0</span>
+        </h3>
+        <button onclick="closeFavoritesModal()" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+      <div id="fav-list" class="flex-1 overflow-y-auto py-3 space-y-2 text-xs">
+        <div class="text-slate-400 py-6 text-center font-medium">Belum ada buku yang ditandai bintang favorit.</div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-between items-center text-xs">
+        <button onclick="clearAllFavorites()" class="text-red-500 hover:text-red-700 font-semibold">Hapus Semua</button>
+        <button onclick="closeFavoritesModal()" class="px-4 py-2 font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-xl">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL BACA LANGSUNG (PREVIEW GOOGLE DRIVE IN-APP) -->
+  <div id="read-modal" class="hidden fixed inset-0 z-[60] overflow-hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6">
+    <div class="relative w-full max-w-5xl h-[92vh] bg-slate-900 rounded-3xl border border-slate-700 shadow-2xl flex flex-col overflow-hidden">
+      <div class="flex items-center justify-between px-6 py-4 bg-slate-800/90 border-b border-slate-700 text-white shrink-0">
+        <div class="flex items-center gap-3 min-w-0 pr-4">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+          <div class="truncate">
+            <h4 class="font-bold text-sm truncate" id="read-modal-title">Pratinjau Bacaan</h4>
+            <p class="text-[11px] text-slate-400 truncate" id="read-modal-cat">Kategori</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <a id="read-modal-external" href="#" target="_blank" rel="noopener noreferrer"
+             class="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition flex items-center gap-1.5">
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+            <span class="hidden sm:inline">Buka di Tab Baru</span>
+          </a>
+          <button onclick="closeReadModal()" class="w-8 h-8 rounded-xl bg-slate-700 hover:bg-slate-600 text-slate-300 hover:text-white flex items-center justify-center transition" aria-label="Tutup jendela baca">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+          </button>
+        </div>
+      </div>
+      <div class="flex-1 bg-slate-950 relative">
+        <div id="read-modal-spinner" class="absolute inset-0 flex flex-col items-center justify-center gap-3 text-slate-400 text-xs">
+          <div class="w-10 h-10 border-4 border-emerald-500/30 border-t-emerald-400 rounded-full animate-spin"></div>
+          <span>Menghubungkan ke Google Drive Cloud Viewer...</span>
+        </div>
+        <iframe id="read-modal-iframe" src="" class="w-full h-full border-0 relative z-10"
+                onload="document.getElementById('read-modal-spinner').style.display='none'"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL QR CODE PER BUKU -->
+  <div id="qr-modal" class="hidden fixed inset-0 z-[60] bg-slate-900/70 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-xs w-full p-6 shadow-2xl border border-slate-200 text-center">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-sm font-bold text-slate-900">QR Buka di HP</h3>
+        <button onclick="closeQrModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+      <div id="qr-canvas-box" class="mx-auto w-fit p-3 bg-white rounded-2xl border border-slate-200"></div>
+      <p class="text-[11px] text-slate-500 mt-3 leading-relaxed">Scan kode ini dengan kamera HP untuk membuka berkas Google Drive langsung di ponsel.</p>
+      <button onclick="downloadQrImage()" class="mt-4 w-full px-4 py-2.5 bg-slate-900 hover:bg-brand-600 text-white text-xs font-bold rounded-xl transition">
+        📥 Unduh QR (PNG)
+      </button>
+    </div>
+  </div>
+
+  <!-- FOOTER RESMI (FULL DESKTOP) -->
+  <footer class="bg-slate-900 text-slate-400 border-t border-slate-800 py-6 text-center text-xs mt-auto">
+    <div class="w-full px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="flex items-center space-x-2">
+        <img src="assets/logo_pojak_square.png" alt="Logo POJAC" class="w-5 h-5 object-contain">
+        <span class="font-bold text-slate-200">POJAC — Pojok Baca © 2024–2026</span>
+        <span>• Perpustakaan Digital Berbasis Google Drive Cloud Hub</span>
+      </div>
+      <div class="text-slate-400 text-xs">
+        <span>Terindeks 34.089 Berkas Aktif <span class="admin-only" style="display:none">(498,68 GB) • Cover Thumbnail Google Drive Cloud</span></span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SCRIPT KONFIG, QR LIB, GENERATOR SAMPUL, DATASET & CLIENT LOGIC -->
+  <script src="config.js?v=2.2.0"></script>
+  <script src="assets/qrcode.min.js?v=2.2.0"></script>
+  <script src="assets/elegant-cover.js?v=2.3.0"></script>
+  <script src="catalog_data.js?v=2.2.0" charset="utf-8"></script>
+  <script>
+    let allBooks = [];
+    let categories = [];
+    let languages = [];
+    let filteredBooks = [];
+    let currentPage = 1;
+    let pageSize = 48;
+    let viewMode = 'grid';
+    let selectedCat = null;
+    let selectedLang = '';
+    let selectedFmt = '';
+    let selectedVol = '';
+    let currentSort = 'title-asc';
+    let searchQuery = '';
+    let categorySearchQuery = '';
+    let currentDetailIdx = -1;
+    let clickCounts = {};
+    try { clickCounts = JSON.parse(localStorage.getItem('pojac_clicks') || '{}') || {}; } catch (e) { clickCounts = {}; }
+
+    // Unifikasi daftar favorit: kunci baru pojac_favorites, migrasi otomatis dari pojak_favs lama
+    let favorites = (function () {
+      try {
+        const cur = localStorage.getItem('pojac_favorites');
+        if (cur !== null) return JSON.parse(cur) || [];
+        const legacy = localStorage.getItem('pojak_favs');
+        if (legacy !== null) {
+          const arr = JSON.parse(legacy) || [];
+          localStorage.setItem('pojac_favorites', JSON.stringify(arr));
+          localStorage.removeItem('pojak_favs');
+          return arr;
+        }
+      } catch (e) { /* abaikan localStorage rusak */ }
+      return [];
+    })();
+
+    // Sumber sampul: thumbnail lokal -> Google Drive -> sampul elegan generatif -> default
+    const coverGenCache = new Map();
+
+    function elegantCoverFor(book) {
+      const key = book[6] || book[0];
+      if (!coverGenCache.has(key) && window.POJAC_COVER) {
+        coverGenCache.set(key, POJAC_COVER.generate(book, categories));
+      }
+      return coverGenCache.get(key);
+    }
+
+    // Proxy thumbnail lokal (server.py) menghindari blokir ORB / hotlink Google Drive.
+    // Otomatis nonaktif bila situs dibuka sebagai berkas statis tanpa server.
+    const THUMB_PROXY = (function () {
+      try {
+        var cfg = window.POJAK_CONFIG || {};
+        if (cfg.thumbProxy === false) return false;
+        if (location.protocol !== 'http:' && location.protocol !== 'https:') return false;
+        var h = location.hostname;
+        return h === 'localhost' || h === '127.0.0.1' || h === '0.0.0.0' ||
+               /^192\.168\./.test(h) || /^10\./.test(h) || /^172\.(1[6-9]|2\d|3[01])\./.test(h);
+      } catch (e) { return false; }
+    })();
+
+    function thumbUrl(gid, tier) {
+      if (!gid) return '';
+      if (tier === 1 && THUMB_PROXY) return '/api/thumb/' + encodeURIComponent(gid);
+      return 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(gid) + '&sz=w400';
+    }
+
+    // Tingkat: 0 = thumbnail lokal, 1 = proxy server, 2 = Google Drive langsung, 3 = sampul generatif
+    function setCoverTier(img, tier) {
+      const url = thumbUrl(img.dataset.gid || '', tier);
+      if (!url) { finishCover(img); return; }
+      img.dataset.tier = String(tier);
+      img.src = url;
+    }
+
+    function finishCover(img) {
+      img.onerror = null;
+      img.dataset.tier = '3';
+      const book = [img.dataset.title, Number(img.dataset.cat), img.dataset.jilid || '-', 0, img.dataset.fmt, 0, img.dataset.gid];
+      elegantCoverFor(book).then(function (url) {
+        if (img.isConnected) img.src = url;
+      }).catch(function () { img.src = 'assets/cover_pojak.jpg'; });
+    }
+
+    function handleCoverError() {
+      const img = this;
+      const tier = Number(img.dataset.tier || 0);
+      if (tier === 0) { setCoverTier(img, 1); return; }   // lokal -> proxy
+      if (tier === 1) { setCoverTier(img, 2); return; }   // proxy -> Drive langsung
+      if (tier === 2) { finishCover(img); return; }        // Drive gagal -> sampul generatif
+      finishCover(img);
+    }
+
+    function attachCover(img, book) {
+      if (!img || !book) return;
+      img.dataset.gid = book[6] || '';
+      img.dataset.title = book[0] || '';
+      img.dataset.cat = book[1] != null ? book[1] : '';
+      img.dataset.fmt = book[4] || '';
+      img.dataset.jilid = book[2] || '-';
+      img.onerror = handleCoverError;
+      if (book[8]) { img.dataset.tier = '0'; img.src = book[8]; return; }
+      if (window.POJAC_COVER && POJAC_COVER.noPreview(book[4])) {
+        // Format tanpa preview dokumen: tampil default sekejap, lalu swap ke sampul elegan
+        img.dataset.tier = '3';
+        img.src = 'assets/cover_pojak.jpg';
+        elegantCoverFor(book).then(url => {
+          if (img.isConnected && img.dataset.gid === (book[6] || '')) img.src = url;
+        }).catch(() => {});
+        return;
+      }
+      setCoverTier(img, THUMB_PROXY ? 1 : 2);
+    }
+
+    function attachCoversIn(rootEl) {
+      rootEl.querySelectorAll('img[data-book-idx]').forEach(im => {
+        const b = filteredBooks[Number(im.dataset.bookIdx)];
+        if (b) attachCover(im, b);
+      });
+    }
+
+    function persistFavorites() {
+      try { localStorage.setItem('pojac_favorites', JSON.stringify(favorites)); } catch (e) {}
+    }
+
+    function trackClick(gid) {
+      if (!gid) return;
+      clickCounts[gid] = (clickCounts[gid] || 0) + 1;
+      try { localStorage.setItem('pojac_clicks', JSON.stringify(clickCounts)); } catch (e) {}
+    }
+
+    // Mode gelap / terang — preferensi tersimpan di browser
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      try { localStorage.setItem('pojac_theme', isDark ? 'dark' : 'light'); } catch (e) { /* abaikan */ }
+    }
+
+    // ===== Dua Akses: Peserta Umum (default) & Super Admin =====
+    function isPojacAdmin() {
+      try { return localStorage.getItem('pojac_admin') === '1'; } catch (e) { return false; }
+    }
+    function logoutAdmin() {
+      try { localStorage.removeItem('pojac_admin'); } catch (e) { /* abaikan */ }
+      location.reload();
+    }
+    function applyAdminMode() {
+      const admin = isPojacAdmin();
+      document.querySelectorAll('.admin-only').forEach(el => { el.style.display = admin ? '' : 'none'; });
+      const statGrid = document.getElementById('statx-grid');
+      if (statGrid) { statGrid.classList.toggle('md:grid-cols-3', !admin); statGrid.classList.toggle('md:grid-cols-4', admin); }
+      document.documentElement.classList.toggle('admin', admin);
+    }
+
+    function toggleFilterSidebar() {
+      const aside = document.getElementById('filter-sidebar');
+      if (!aside) return;
+      aside.classList.toggle('hidden');
+      if (!aside.classList.contains('hidden')) {
+        aside.classList.add('fixed', 'inset-x-3', 'top-20', 'bottom-4', 'z-50', 'overflow-y-auto', 'bg-slate-100', 'p-2', 'rounded-2xl', 'shadow-2xl');
+        document.body.style.overflow = 'hidden';
+      } else {
+        aside.classList.remove('fixed', 'inset-x-3', 'top-20', 'bottom-4', 'z-50', 'overflow-y-auto', 'bg-slate-100', 'p-2', 'rounded-2xl', 'shadow-2xl');
+        document.body.style.overflow = '';
+      }
+    }
+
+    // Emoji label untuk format berkas yang umum
+    function getFormatEmoji(fmt) {
+      const map = {
+        'PDF': '📕', 'MP3': '🎧', 'DOC': '📝', 'DOCX': '📝', 'MP4': '🎬',
+        'ZIP': '📦', 'RAR': '📦', 'EPUB': '📗', 'PPT': '📊', 'PPTX': '📊',
+        'CHM': '📘', 'DJVU': '📙', 'XLS': '📈', 'XLSX': '📈', 'PNG': '🖼️',
+        'JPG': '🖼️', 'JPEG': '🖼️', 'TXT': '📄', 'MOBI': '📗', 'APK': '📱'
+      };
+      return map[fmt] || '📄';
+    }
+
+    // Bangun opsi filter format secara dinamis dari isi dataset (terurut terbanyak)
+    function buildFormatFilter() {
+      const counts = {};
+      allBooks.forEach(b => { counts[b[4]] = (counts[b[4]] || 0) + 1; });
+      const sorted = Object.keys(counts).sort((a, b) => counts[b] - counts[a]);
+      const select = document.getElementById('format-filter');
+      if (!select) return;
+      const current = selectedFmt;
+      let html = '<option value="">Semua Format File</option>';
+      sorted.forEach(fmt => {
+        html += `<option value="${escapeHtml(fmt)}">${getFormatEmoji(fmt)} ${escapeHtml(fmt)} (${counts[fmt].toLocaleString('id-ID')} file)</option>`;
+      });
+      select.innerHTML = html;
+      if (current) select.value = current;
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    // Jalankan inisialisasi aplikasi dengan deteksi state DOM yang tangguh
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', startPojakApp);
+    } else {
+      startPojakApp();
+    }
+
+    function startPojakApp() {
+      applyAdminMode();
+      setupEventListeners();
+      updateFavBadge();
+      checkAndInitCatalog();
+    }
+
+    function setupEventListeners() {
+      // Keyboard shortcut '/' to search
+      document.addEventListener('keydown', (e) => {
+        if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
+          e.preventDefault();
+          const si = document.getElementById('search-input');
+          if (si) si.focus();
+        }
+      });
+
+      // Debounced search
+      let searchTimeout;
+      const searchInput = document.getElementById('search-input');
+      if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+          clearTimeout(searchTimeout);
+          const val = e.target.value;
+          const clearBtn = document.getElementById('clear-search-btn');
+          if (clearBtn) clearBtn.classList.toggle('hidden', val.length === 0);
+          searchTimeout = setTimeout(() => {
+            searchQuery = val.trim().toLowerCase();
+            currentPage = 1;
+            applyFilters();
+          }, 150);
+        });
+      }
+
+      // Category filter search
+      const catSearch = document.getElementById('cat-search-input');
+      if (catSearch) {
+        catSearch.addEventListener('input', (e) => {
+          categorySearchQuery = e.target.value.trim().toLowerCase();
+          renderCategorySidebar();
+        });
+      }
+    }
+
+    function checkAndInitCatalog(attempt = 0) {
+      if (window.POJAK_CATALOG && Array.isArray(window.POJAK_CATALOG.items) && window.POJAK_CATALOG.items.length > 0) {
+        initApp();
+      } else if (attempt < 50) {
+        // Tampilkan indikator memuat katalog selama berkas 5.5 MB diparsing
+        const container = document.getElementById('books-container');
+        if (container && attempt === 0) {
+          container.innerHTML = `
+            <div class="bg-white rounded-3xl border border-slate-200/90 p-16 text-center shadow-xs">
+              <div class="w-12 h-12 border-4 border-amber-200 border-t-amber-600 rounded-full animate-spin mx-auto mb-4"></div>
+              <h3 class="text-base font-bold text-slate-800 mb-1">Menyiapkan 34.089 Koleksi Kitab & Buku...</h3>
+              <p class="text-xs text-slate-500 font-medium">Sedang memproses basis data katalog resmi Perpustakaan 5. Pojak.</p>
+            </div>
+          `;
+        }
+        setTimeout(() => checkAndInitCatalog(attempt + 1), 100);
+      } else {
+        fetchCatalogFallback();
+      }
+    }
+
+    function fetchCatalogFallback() {
+      console.log('Memulai pengambilan cadangan data catalog_data.js via fetch()...');
+      fetch('catalog_data.js')
+        .then(res => res.text())
+        .then(code => {
+          try {
+            // Evaluasi aman skrip
+            const fn = new Function(code);
+            fn();
+            if (window.POJAK_CATALOG && window.POJAK_CATALOG.items) {
+              initApp();
+            } else {
+              showDatasetError();
+            }
+          } catch(err) {
+            console.error('Evaluasi data katalog gagal:', err);
+            showDatasetError();
+          }
+        })
+        .catch(err => {
+          console.error('Fetch catalog_data.js gagal:', err);
+          showDatasetError();
+        });
+    }
+
+    function showDatasetError() {
+      const container = document.getElementById('books-container');
+      if (container) {
+        container.innerHTML = `
+          <div class="bg-amber-50 border border-amber-200 text-amber-800 p-8 rounded-3xl text-center">
+            <h3 class="font-bold text-sm mb-1">Dataset Belum Ditemukan</h3>
+            <p class="text-xs mb-3">Pastikan berkas <code>catalog_data.js</code> berada pada direktori yang sama dengan aplikasi ini.</p>
+            <button onclick="location.reload()" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold transition">
+              Muat Ulang Halaman
+            </button>
+          </div>
+        `;
+      }
+    }
+
+    function initApp() {
+      if (!window.POJAK_CATALOG || !window.POJAK_CATALOG.items) {
+        document.getElementById('books-container').innerHTML = `
+          <div class="bg-amber-50 border border-amber-200 text-amber-800 p-8 rounded-3xl text-center">
+            <h3 class="font-bold text-sm mb-1">Dataset Belum Ditemukan</h3>
+            <p class="text-xs">Pastikan berkas <code>catalog_data.js</code> berada pada direktori yang sama dengan aplikasi ini.</p>
+          </div>
+        `;
+        return;
+      }
+
+      categories = window.POJAK_CATALOG.categories;
+      languages = window.POJAK_CATALOG.languages;
+      allBooks = window.POJAK_CATALOG.items;
+
+      if (window.location.protocol.startsWith('http')) {
+        const pill = document.getElementById('server-status-pill');
+        if (pill) {
+          pill.innerHTML = `
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span class="font-bold text-emerald-300">🟢 Server Online (${window.location.host})</span>
+          `;
+        }
+      }
+
+      // Baca parameter dari URL (jika dialihkan dari Landing Page atau link eksternal)
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const queryParam = urlParams.get('q');
+        const catParam = urlParams.get('cat');
+        const catNameParam = urlParams.get('kategori');
+        const langParam = urlParams.get('lang');
+        const fmtParam = urlParams.get('fmt');
+
+        if (queryParam) {
+          searchQuery = queryParam.trim().toLowerCase();
+          const searchInput = document.getElementById('search-input');
+          if (searchInput) searchInput.value = queryParam;
+          const clearBtn = document.getElementById('clear-search-btn');
+          if (clearBtn) clearBtn.classList.remove('hidden');
+        }
+        if (catNameParam) {
+          // Deep-link berbasis nama kategori (dari kartu pilar landing page), case-insensitive
+          const wanted = catNameParam.trim().toLowerCase();
+          const foundIdx = categories.findIndex(c => c.toLowerCase() === wanted);
+          if (foundIdx >= 0) selectedCat = foundIdx;
+        } else if (catParam !== null && catParam !== '') {
+          const catIdx = parseInt(catParam, 10);
+          if (!isNaN(catIdx) && catIdx >= 0 && catIdx < categories.length) {
+            selectedCat = catIdx;
+          }
+        }
+        if (langParam) {
+          selectedLang = langParam;
+          const langRadio = document.querySelector(`input[name="lang-filter"][value="${langParam}"]`);
+          if (langRadio) langRadio.checked = true;
+        }
+        if (fmtParam) {
+          selectedFmt = fmtParam;
+        }
+      } catch (err) {
+        console.warn('Gagal membaca parameter URL:', err);
+      }
+
+      updateCatalogStats();
+      buildFormatFilter();
+      renderCategorySidebar();
+      applyFilters();
+    }
+
+    // Statistik kartu ringkasan dihitung live dari dataset agar selalu akurat
+    function updateCatalogStats() {
+      const fmtId = (num, dec = 0) => num.toLocaleString('id-ID', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+      const setText = (id, val) => { const el = document.getElementById(id); if (el) el.innerText = val; };
+      const totalMb = allBooks.reduce((s, b) => s + (Number(b[5]) || 0), 0);
+      const hiddenCats = (window.POJAK_CONFIG && window.POJAK_CONFIG.hiddenCategories) || [];
+      const visibleCats = categories.filter(c => !hiddenCats.includes(c)).length;
+      const arabIdx = languages.indexOf('Arab');
+      setText('statx-total', fmtId(allBooks.length));
+      setText('statx-gb', fmtId(totalMb / 1024, 2));
+      setText('statx-cats', fmtId(visibleCats));
+      setText('statx-arab', fmtId(allBooks.filter(b => b[3] === arabIdx).length));
+
+      // Jumlah per bahasa pada panel Klasifikasi Bahasa (dihitung live dari dataset)
+      const langCount = {};
+      allBooks.forEach(b => { langCount[b[3]] = (langCount[b[3]] || 0) + 1; });
+      const langVals = { 'langcount-arab': 'Arab', 'langcount-id': 'Indonesia', 'langcount-tr': 'Terjemahan (Arab - ID)', 'langcount-pg': 'Pegon / Jawa', 'langcount-en': 'Inggris' };
+      Object.entries(langVals).forEach(([elId, langName]) => {
+        const idx = languages.indexOf(langName);
+        setText(elId, fmtId(idx >= 0 ? (langCount[idx] || 0) : 0));
+      });
+      setText('langcount-all', fmtId(allBooks.length));
+
+      // Bar status atas
+      const topTotal = document.getElementById('topbar-total');
+      if (topTotal) topTotal.innerText = fmtId(allBooks.length) + ' Berkas';
+    }
+
+    function renderCategorySidebar() {
+      const counts = {};
+      allBooks.forEach(b => {
+        counts[b[1]] = (counts[b[1]] || 0) + 1;
+      });
+
+      const container = document.getElementById('category-list');
+      let html = `
+        <button onclick="setCategory(null)" class="w-full text-left px-2.5 py-1.5 rounded-xl font-medium transition flex items-center justify-between ${selectedCat === null ? 'bg-brand-50 text-brand-700 font-bold border border-brand-200' : 'text-slate-600 hover:bg-slate-50'}">
+          <span>Semua Kategori</span>
+          <span class="text-[11px] font-semibold text-slate-400 font-mono">${allBooks.length.toLocaleString('id-ID')}</span>
+        </button>
+      `;
+
+      categories.forEach((cat, idx) => {
+        // Sembunyikan kategori internal (aset logo/identitas) dari katalog publik
+        const hiddenCats = (window.POJAK_CONFIG && window.POJAK_CONFIG.hiddenCategories) || [];
+        if (hiddenCats.includes(cat)) return;
+        if (categorySearchQuery && !cat.toLowerCase().includes(categorySearchQuery)) return;
+        const count = counts[idx] || 0;
+        const isSelected = selectedCat === idx;
+        html += `
+          <button onclick="setCategory(${idx})" class="w-full text-left px-2.5 py-1.5 rounded-xl transition flex items-center justify-between ${isSelected ? 'bg-brand-50 text-brand-700 font-bold border border-brand-200' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'}">
+            <span class="truncate pr-2">${escapeHtml(displayCat(cat))}</span>
+            <span class="text-[10px] font-semibold ${isSelected ? 'bg-brand-200 text-brand-800' : 'bg-slate-100 text-slate-500'} px-2 py-0.5 rounded-full shrink-0 font-mono">${count.toLocaleString('id-ID')}</span>
+          </button>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function setCategory(catIdx) {
+      selectedCat = catIdx;
+      currentPage = 1;
+      renderCategorySidebar();
+      applyFilters();
+    }
+
+    function resetCategory() {
+      setCategory(null);
+    }
+
+    function resetAllFilters() {
+      selectedCat = null;
+      selectedLang = '';
+      selectedFmt = '';
+      selectedVol = '';
+      searchQuery = '';
+      document.getElementById('search-input').value = '';
+      document.getElementById('clear-search-btn').classList.add('hidden');
+      document.getElementById('format-filter').value = '';
+      document.getElementById('volume-filter').value = '';
+      const radios = document.getElementsByName('lang-filter');
+      radios[0].checked = true;
+      currentPage = 1;
+      renderCategorySidebar();
+      applyFilters();
+    }
+
+    function onFilterChange() {
+      const langRadios = document.getElementsByName('lang-filter');
+      for (const r of langRadios) {
+        if (r.checked) { selectedLang = r.value; break; }
+      }
+      selectedFmt = document.getElementById('format-filter').value;
+      selectedVol = document.getElementById('volume-filter').value;
+      currentSort = document.getElementById('sort-filter').value;
+      currentPage = 1;
+      applyFilters();
+    }
+
+    function clearSearch() {
+      document.getElementById('search-input').value = '';
+      document.getElementById('clear-search-btn').classList.add('hidden');
+      searchQuery = '';
+      currentPage = 1;
+      applyFilters();
+    }
+
+    function isArabicText(text) {
+      return /[؀-ۿݐ-ݿࢠ-ࣿﭐ-﷿ﹰ-﻿]/.test(text);
+    }
+
+    // Tampilkan nama kategori tanpa awalan nomor urut ("01. Al-Qur'an..." -> "Al-Qur'an...")
+    function displayCat(name) {
+      return String(name || '').replace(/^\d+\.\s*/, '');
+    }
+
+    function applyFilters() {
+      filteredBooks = allBooks.filter(book => {
+        // [title, cat_idx, jilid, lang_idx, format, size_mb, gdrive_id, subfolder, local_thumb]
+        const title = book[0];
+        const catIdx = book[1];
+        const jilid = book[2];
+        const langIdx = book[3];
+        const langName = languages[langIdx];
+        const fmt = book[4];
+        const subfolder = book[7];
+
+        if (selectedCat !== null && catIdx !== selectedCat) return false;
+        if (selectedLang && langName !== selectedLang) return false;
+        if (selectedFmt && fmt !== selectedFmt) return false;
+        if (selectedVol === 'multi' && jilid === '-') return false;
+        if (selectedVol === 'single' && jilid !== '-') return false;
+
+        if (searchQuery) {
+          const matchTitle = title.toLowerCase().includes(searchQuery);
+          const matchSub = subfolder.toLowerCase().includes(searchQuery);
+          const matchVol = jilid.toLowerCase().includes(searchQuery);
+          const matchCat = categories[catIdx].toLowerCase().includes(searchQuery);
+          if (!matchTitle && !matchSub && !matchVol && !matchCat) return false;
+        }
+
+        return true;
+      });
+
+      // Sorting
+      if (currentSort === 'title-asc') {
+        filteredBooks.sort((a, b) => a[0].localeCompare(b[0], 'id'));
+      } else if (currentSort === 'title-desc') {
+        filteredBooks.sort((a, b) => b[0].localeCompare(a[0], 'id'));
+      } else if (currentSort === 'pop-desc') {
+        filteredBooks.sort((a, b) => (clickCounts[b[6]] || 0) - (clickCounts[a[6]] || 0) || a[0].localeCompare(b[0], 'id'));
+      } else if (currentSort === 'size-desc') {
+        filteredBooks.sort((a, b) => b[5] - a[5]);
+      } else if (currentSort === 'size-asc') {
+        filteredBooks.sort((a, b) => a[5] - b[5]);
+      } else if (currentSort === 'cat-asc') {
+        filteredBooks.sort((a, b) => a[1] - b[1] || a[0].localeCompare(b[0]));
+      }
+
+      // Status Bar badges
+      const countEl = document.getElementById('results-count');
+      countEl.innerText = `${filteredBooks.length.toLocaleString('id-ID')} Berkas`;
+
+      const catBadge = document.getElementById('active-cat-badge');
+      if (selectedCat !== null) {
+        catBadge.innerText = displayCat(categories[selectedCat]);
+        catBadge.classList.remove('hidden');
+      } else {
+        catBadge.classList.add('hidden');
+      }
+
+      const langBadge = document.getElementById('active-lang-badge');
+      if (selectedLang) {
+        langBadge.innerText = selectedLang;
+        langBadge.classList.remove('hidden');
+      } else {
+        langBadge.classList.add('hidden');
+      }
+
+      const fmtBadge = document.getElementById('active-fmt-badge');
+      if (selectedFmt) {
+        fmtBadge.innerText = selectedFmt;
+        fmtBadge.classList.remove('hidden');
+      } else {
+        fmtBadge.classList.add('hidden');
+      }
+
+      const resetBtn = document.getElementById('reset-all-filters-btn');
+      if (selectedCat !== null || selectedLang || selectedFmt || selectedVol || searchQuery) {
+        resetBtn.classList.remove('hidden');
+      } else {
+        resetBtn.classList.add('hidden');
+      }
+
+      renderBooks();
+      renderPagination();
+    }
+
+    function setViewMode(mode) {
+      viewMode = mode;
+      document.getElementById('view-grid-btn').className = mode === 'grid' 
+        ? 'px-3 py-1.5 rounded-lg font-bold bg-white text-slate-900 shadow-xs transition flex items-center gap-1.5'
+        : 'px-3 py-1.5 rounded-lg font-medium text-slate-600 hover:text-slate-900 transition flex items-center gap-1.5';
+      document.getElementById('view-table-btn').className = mode === 'table'
+        ? 'px-3 py-1.5 rounded-lg font-bold bg-white text-slate-900 shadow-xs transition flex items-center gap-1.5'
+        : 'px-3 py-1.5 rounded-lg font-medium text-slate-600 hover:text-slate-900 transition flex items-center gap-1.5';
+      renderBooks();
+    }
+
+    function getFormatBadgeColor(fmt) {
+      switch (fmt) {
+        case 'PDF': return 'bg-rose-500 text-white';
+        case 'MP3': return 'bg-purple-600 text-white';
+        case 'MP4': return 'bg-indigo-600 text-white';
+        case 'DOC':
+        case 'DOCX': return 'bg-sky-600 text-white';
+        case 'ZIP':
+        case 'RAR': return 'bg-amber-600 text-white';
+        default: return 'bg-slate-600 text-white';
+      }
+    }
+
+    function getLanguageBadge(langName) {
+      switch (langName) {
+        case 'Arab': return '<span class="bg-emerald-100 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded-md text-[10px] font-bold">🇸🇦 Arab</span>';
+        case 'Terjemahan (Arab - ID)': return '<span class="bg-brand-100 text-brand-800 border border-brand-200 px-2 py-0.5 rounded-md text-[10px] font-bold">📖 Terjemahan</span>';
+        case 'Pegon / Jawa': return '<span class="bg-amber-100 text-amber-800 border border-amber-200 px-2 py-0.5 rounded-md text-[10px] font-bold">📜 Pegon</span>';
+        case 'Inggris': return '<span class="bg-blue-100 text-blue-800 border border-blue-200 px-2 py-0.5 rounded-md text-[10px] font-bold">🇬🇧 English</span>';
+        default: return '<span class="bg-slate-100 text-slate-700 border border-slate-200 px-2 py-0.5 rounded-md text-[10px] font-semibold">🇮🇩 ID</span>';
+      }
+    }
+
+    // Palette theme generator for procedural luxury covers
+    function getCategoryGradient(catIdx) {
+      const grads = [
+        'from-emerald-900 via-teal-950 to-slate-950 border-emerald-500/40', // 01 Quran
+        'from-slate-900 via-blue-950 to-slate-950 border-blue-500/40',     // 02 Hadits
+        'from-sky-950 via-teal-950 to-slate-950 border-cyan-500/40',       // 03 Fiqh
+        'from-indigo-950 via-slate-900 to-slate-950 border-indigo-500/40',  // 04 Akidah
+        'from-emerald-950 via-stone-900 to-slate-950 border-emerald-600/40',// 05 Tasawuf
+        'from-amber-950 via-rose-950 to-slate-950 border-amber-500/40',    // 06 Bahasa Arab
+        'from-stone-900 via-amber-950 to-slate-950 border-amber-600/40',   // 07 Pegon
+        'from-amber-900 via-yellow-950 to-slate-950 border-amber-400/40',  // 08 Sejarah
+        'from-cyan-950 via-blue-950 to-slate-950 border-cyan-400/40',      // 09 IT & AI
+        'from-emerald-900 via-slate-900 to-slate-950 border-emerald-400/40',// 10 Bisnis
+        'from-violet-950 via-purple-950 to-slate-950 border-purple-400/40', // 11 Self dev
+        'from-blue-900 via-indigo-950 to-slate-950 border-blue-400/40',     // 12 Pendidikan
+        'from-rose-950 via-slate-900 to-slate-950 border-rose-400/40',      // 13 Sastra
+        'from-amber-950 via-slate-900 to-slate-950 border-amber-500/40',   // 14 Ensiklopedi
+        'from-slate-900 via-stone-900 to-slate-950 border-slate-600/40',   // 15 Khazanah umum
+      ];
+      return grads[catIdx % grads.length];
+    }
+
+    function renderBooks() {
+      const container = document.getElementById('books-container');
+      if (filteredBooks.length === 0) {
+        container.innerHTML = `
+          <div class="bg-white rounded-3xl border border-slate-200/90 p-16 text-center shadow-xs">
+            <div class="w-16 h-16 bg-slate-100 text-slate-400 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <h3 class="text-base font-bold text-slate-900 mb-1">Tidak Ditemukan Berkas yang Cocok</h3>
+            <p class="text-xs text-slate-500 max-w-sm mx-auto mb-5 font-medium">Coba gunakan kata kunci lain atau hapus penyaringan kategori/bahasa yang sedang aktif.</p>
+            <button onclick="resetAllFilters()" class="px-5 py-2.5 bg-slate-900 hover:bg-brand-700 text-white rounded-xl text-xs font-bold shadow-sm transition">
+              Kembalikan ke Semua Koleksi
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      pageSize = getEffectivePageSize();
+      const startIndex = (currentPage - 1) * pageSize;
+      const pageItems = filteredBooks.slice(startIndex, startIndex + pageSize);
+
+      if (viewMode === 'grid') {
+        // FULL DESKTOP GALLERY GRID DENGAN THUMBNAIL COVER (4 - 5 KOLOM)
+        let html = '<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">';
+        pageItems.forEach((book, idx) => {
+          const globalIdx = startIndex + idx;
+          const [title, catIdx, jilid, langIdx, fmt, sizeMb, gid, subfolder, localThumb] = book;
+          const catName = categories[catIdx];
+          const langName = languages[langIdx];
+          const isFav = favorites.includes(gid);
+          const isAr = isArabicText(title);
+          const driveUrl = `https://drive.google.com/file/d/${gid}/view?usp=sharing`;
+          const popCount = clickCounts[gid] || 0;
+
+          html += `
+            <div class="bg-white rounded-2xl border border-slate-200/90 hover:border-brand-500 p-3 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between group">
+              <div>
+                <!-- COVER BUKU / THUMBNAIL FRAME (ASPECT 3:4) -->
+                <div class="relative w-full aspect-[3/4] bg-slate-900 rounded-xl overflow-hidden book-cover-frame mb-3 cursor-pointer group-hover:brightness-105 transition" onclick="showDetail(${globalIdx})">
+                  <div class="book-spine-line"></div>
+                  <img
+                    data-book-idx="${globalIdx}"
+                    loading="lazy"
+                    alt="${escapeHtml(title)}"
+                    class="w-full h-full object-cover object-top transition duration-300 group-hover:scale-105"
+                  />
+                  <!-- Format & Jilid overlay badges -->
+                  <div class="absolute top-2 left-2 z-20 flex items-center gap-1">
+                    <span class="text-[9px] font-extrabold px-1.5 py-0.5 rounded shadow-xs ${getFormatBadgeColor(fmt)} font-mono">${fmt}</span>
+                    ${jilid !== '-' ? `<span class="bg-amber-900/90 text-amber-200 backdrop-blur-xs text-[9px] font-bold px-1.5 py-0.5 rounded border border-amber-500/40 shadow-xs">${jilid}</span>` : ''}
+                  </div>
+                  <button onclick="event.stopPropagation(); toggleFavorite('${gid}')" class="absolute top-2 right-2 z-20 w-7 h-7 rounded-full bg-slate-900/60 backdrop-blur-xs text-white hover:text-amber-400 flex items-center justify-center transition" title="Tandai Favorit">
+                    ${isFav ? '<span class="text-amber-400 font-bold">★</span>' : '☆'}
+                  </button>
+                </div>
+
+                <!-- Tag Bahasa & Kategori -->
+                <div class="flex items-center gap-1.5 mb-1.5 flex-wrap">
+                  ${getLanguageBadge(langName)}
+                  <span class="text-[10px] text-slate-500 truncate max-w-[110px] font-medium" title="${escapeHtml(displayCat(catName))}">${escapeHtml(displayCat(catName))}</span>
+                  <span class="ml-auto text-[10px] text-slate-400 font-mono font-bold shrink-0">${sizeMb.toFixed(1)} MB</span>
+                </div>
+
+                <!-- Judul Buku -->
+                <h4 class="${isAr ? 'arabic-title text-slate-900 group-hover:text-brand-700' : 'text-xs font-bold text-slate-900 group-hover:text-brand-700 line-clamp-2 leading-snug'} transition mb-2" title="${escapeHtml(title)}">
+                  ${escapeHtml(title)}
+                </h4>
+              </div>
+
+              <!-- Baris Aksi Bawah -->
+              <div class="pt-2.5 border-t border-slate-100 flex items-center justify-end gap-1.5 text-xs mt-auto">
+                ${popCount > 0 ? `<span class="mr-auto text-[10px] font-bold text-amber-600 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded-md" title="Sering dibuka">🔥 ${popCount}</span>` : ''}
+                <button onclick="showDetail(${globalIdx})" class="px-2 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold transition text-[11px]">
+                  Detail
+                </button>
+                <button onclick="trackClick('${gid}'); openReadModalByIdx(${globalIdx})" class="px-2 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold transition text-[11px]">
+                  Baca
+                </button>
+                <a href="${driveUrl}" target="_blank" rel="noopener noreferrer" onclick="trackClick('${gid}')" class="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-brand-600 text-white font-bold transition flex items-center gap-1 shadow-2xs text-[11px]">
+                  <span>Buka ↗</span>
+                </a>
+              </div>
+            </div>
+          `;
+        });
+        html += '</div>';
+        container.innerHTML = html;
+        attachCoversIn(container);
+      } else {
+        // MODE TABEL LEBAR (DENGAN THUMBNAIL MINI)
+        let html = `
+          <div class="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-900 border-b border-slate-800 text-slate-300 font-bold uppercase text-[10px] tracking-wider">
+                <tr>
+                  <th class="py-3 px-3 w-12 text-center">No</th>
+                  <th class="py-3 px-3 w-14 text-center">Cover</th>
+                  <th class="py-3 px-4">Judul Buku / Naskah</th>
+                  <th class="py-3 px-4">Kategori / Genre</th>
+                  <th class="py-3 px-4 text-center">Jilid</th>
+                  <th class="py-3 px-4 text-center">Bahasa</th>
+                  <th class="py-3 px-4 text-center">Format</th>
+                  <th class="py-3 px-4 text-right">Ukuran</th>
+                  <th class="py-3 px-4 text-center w-28">Aksi</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+        `;
+        pageItems.forEach((book, idx) => {
+          const globalIdx = startIndex + idx;
+          const [title, catIdx, jilid, langIdx, fmt, sizeMb, gid, subfolder, localThumb] = book;
+          const catName = categories[catIdx];
+          const langName = languages[langIdx];
+          const isAr = isArabicText(title);
+          const driveUrl = `https://drive.google.com/file/d/${gid}/view?usp=sharing`;
+
+          html += `
+            <tr class="hover:bg-slate-50 transition">
+              <td class="py-2 px-3 font-mono text-slate-400 text-center">${globalIdx + 1}</td>
+              <td class="py-2 px-3 text-center">
+                <div class="w-9 h-12 rounded bg-slate-800 overflow-hidden shadow-xs cursor-pointer border border-slate-200 inline-block" onclick="showDetail(${globalIdx})">
+                  <img data-book-idx="${globalIdx}" alt="Cover" loading="lazy" class="w-full h-full object-cover object-top">
+                </div>
+              </td>
+              <td class="py-2 px-4 font-bold text-slate-900 max-w-md ${isAr ? 'arabic-title' : 'truncate'}" title="${escapeHtml(title)}">${escapeHtml(title)}</td>
+              <td class="py-2 px-4 text-slate-600 max-w-[200px] truncate font-medium">${escapeHtml(displayCat(catName))}</td>
+              <td class="py-2 px-4 font-bold text-slate-700 text-center font-mono">${jilid}</td>
+              <td class="py-2 px-4 text-center">${getLanguageBadge(langName)}</td>
+              <td class="py-2 px-4 text-center"><span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold ${getFormatBadgeColor(fmt)} font-mono">${fmt}</span></td>
+              <td class="py-2 px-4 text-slate-600 font-mono text-right font-medium">${sizeMb.toFixed(2)} MB</td>
+              <td class="py-2 px-4 text-center space-x-1">
+                <button onclick="showDetail(${globalIdx})" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-bold text-[11px]">Info</button>
+                <a href="${driveUrl}" target="_blank" rel="noopener noreferrer" onclick="trackClick('${gid}')" class="px-2.5 py-1 bg-slate-900 hover:bg-brand-600 text-white rounded-lg font-bold text-[11px]">Buka ↗</a>
+              </td>
+            </tr>
+          `;
+        });
+        html += '</tbody></table></div>';
+        container.innerHTML = html;
+        attachCoversIn(container);
+      }
+    }
+
+    function renderPagination() {
+      const totalPages = Math.ceil(filteredBooks.length / pageSize) || 1;
+      const startIndex = (currentPage - 1) * pageSize + 1;
+      const endIndex = Math.min(currentPage * pageSize, filteredBooks.length);
+
+      document.getElementById('pagination-info').innerText = filteredBooks.length > 0
+        ? `Menampilkan ${startIndex.toLocaleString('id-ID')} – ${endIndex.toLocaleString('id-ID')} dari total ${filteredBooks.length.toLocaleString('id-ID')} berkas`
+        : 'Tidak ada berkas yang ditampilkan';
+
+      const btnContainer = document.getElementById('pagination-buttons');
+      let html = '';
+
+      html += `
+        <button onclick="goToPage(1)" ${currentPage === 1 ? 'disabled class="px-2.5 py-1.5 rounded-lg text-slate-300 border border-slate-200 cursor-not-allowed"' : 'class="px-2.5 py-1.5 rounded-lg text-slate-600 hover:bg-slate-100 border border-slate-200 font-bold"'}>
+          « Awal
+        </button>
+        <button onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled class="px-2.5 py-1.5 rounded-lg text-slate-300 border border-slate-200 cursor-not-allowed"' : 'class="px-2.5 py-1.5 rounded-lg text-slate-600 hover:bg-slate-100 border border-slate-200 font-bold"'}>
+          ‹
+        </button>
+      `;
+
+      let startP = Math.max(1, currentPage - 2);
+      let endP = Math.min(totalPages, currentPage + 2);
+
+      for (let p = startP; p <= endP; p++) {
+        html += `
+          <button onclick="goToPage(${p})" class="px-3 py-1.5 rounded-lg font-bold ${p === currentPage ? 'bg-slate-900 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-100 border border-slate-200'} font-mono">
+            ${p}
+          </button>
+        `;
+      }
+
+      html += `
+        <button onclick="goToPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled class="px-2.5 py-1.5 rounded-lg text-slate-300 border border-slate-200 cursor-not-allowed"' : 'class="px-2.5 py-1.5 rounded-lg text-slate-600 hover:bg-slate-100 border border-slate-200 font-bold"'}>
+          ›
+        </button>
+        <button onclick="goToPage(${totalPages})" ${currentPage === totalPages ? 'disabled class="px-2.5 py-1.5 rounded-lg text-slate-300 border border-slate-200 cursor-not-allowed"' : 'class="px-2.5 py-1.5 rounded-lg text-slate-600 hover:bg-slate-100 border border-slate-200 font-bold"'}>
+          Akhir »
+        </button>
+      `;
+
+      btnContainer.innerHTML = html;
+    }
+
+    function goToPage(page) {
+      const totalPages = Math.ceil(filteredBooks.length / pageSize) || 1;
+      if (page < 1 || page > totalPages) return;
+      currentPage = page;
+      renderBooks();
+      renderPagination();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ============ AUTO-ROW SMART PAGINATION ENGINE ============
+    // Mendeteksi jumlah kolom aktif di layar dan otomatis menyesuaikan limit buku
+    // agar baris terakhir di layar SELALU terisi penuh tanpa ada ruang sisa bolong
+    function getActiveGridCols() {
+      if (viewMode === 'table') return 1;
+      const gridEl = document.querySelector('#books-container > div.grid');
+      if (gridEl) {
+        const style = window.getComputedStyle(gridEl);
+        const colsStr = style.getPropertyValue('grid-template-columns');
+        if (colsStr) {
+          const count = colsStr.split(' ').filter(c => c.trim().length > 0).length;
+          if (count > 0) return count;
+        }
+      }
+      const w = window.innerWidth;
+      if (w >= 1536) return 5;
+      if (w >= 1280) return 4;
+      if (w >= 1024) return 3;
+      if (w >= 640) return 2;
+      return 1;
+    }
+
+    function getEffectivePageSize() {
+      const sel = document.getElementById('page-size');
+      const val = sel ? sel.value : 'auto';
+      const cols = getActiveGridCols();
+
+      if (viewMode === 'table') {
+        if (val === 'auto') return 50;
+        return parseInt(val, 10) || 50;
+      }
+
+      if (val === 'auto') {
+        // Target sekitar 10 baris penuh per halaman (50 buku di monitor 5 kolom, 48 di 4 kolom, dll)
+        const targetRows = cols >= 4 ? (cols === 5 ? 10 : 12) : (cols === 3 ? 16 : 24);
+        return targetRows * cols;
+      }
+
+      const explicit = parseInt(val, 10) || 50;
+      // Jika user memilih angka statis, otomatis bulatkan ke atas kelipatan baris penuh
+      if (cols > 1 && explicit % cols !== 0) {
+        return Math.ceil(explicit / cols) * cols;
+      }
+      return explicit;
+    }
+
+    function changePageSize() {
+      pageSize = getEffectivePageSize();
+      currentPage = 1;
+      renderBooks();
+      renderPagination();
+    }
+
+    // Auto-recalculate baris penuh saat ukuran jendela / orientasi layar berubah
+    let autoResizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(autoResizeTimer);
+      autoResizeTimer = setTimeout(() => {
+        const newSize = getEffectivePageSize();
+        if (newSize !== pageSize) {
+          pageSize = newSize;
+          const maxPage = Math.ceil(filteredBooks.length / pageSize) || 1;
+          if (currentPage > maxPage) currentPage = maxPage;
+          renderBooks();
+          renderPagination();
+        }
+      }, 200);
+    });
+
+    function showDetail(globalIdx) {
+      const book = filteredBooks[globalIdx];
+      if (!book) return;
+      const [title, catIdx, jilid, langIdx, fmt, sizeMb, gid, subfolder, localThumb] = book;
+      const catName = categories[catIdx];
+      const langName = languages[langIdx];
+      const driveUrl = `https://drive.google.com/file/d/${gid}/view?usp=sharing`;
+      currentDetailIdx = globalIdx;
+
+      document.getElementById('modal-title').innerText = title;
+      document.getElementById('modal-cat-badge').innerText = displayCat(catName);
+      document.getElementById('modal-lang-badge').innerText = langName;
+      document.getElementById('modal-lang').innerText = langName;
+      document.getElementById('modal-vol').innerText = jilid;
+      document.getElementById('modal-fmt').innerText = fmt;
+      document.getElementById('modal-size').innerText = `${sizeMb.toFixed(2)} MB (${(sizeMb/1024).toFixed(3)} GB)`;
+      document.getElementById('modal-path').innerText = subfolder;
+      document.getElementById('modal-link-input').value = driveUrl;
+      document.getElementById('modal-drive-btn').href = driveUrl;
+
+      // Cover modal (thumbnail GDrive atau sampul elegan generatif)
+      attachCover(document.getElementById('modal-cover-img'), book);
+
+      // Link cari di internet Google Images
+      const googleSearchUrl = `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(title + ' cover buku')}`;
+      document.getElementById('modal-google-img-btn').href = googleSearchUrl;
+
+      document.getElementById('detail-modal').classList.remove('hidden');
+    }
+
+    function closeDetailModal() {
+      document.getElementById('detail-modal').classList.add('hidden');
+    }
+
+    function copyModalLink() {
+      const input = document.getElementById('modal-link-input');
+      input.select();
+      navigator.clipboard.writeText(input.value);
+      alert('Tautan Google Drive berhasil disalin ke papan klip!');
+    }
+
+    function toggleFavorite(gid) {
+      const idx = favorites.indexOf(gid);
+      if (idx > -1) {
+        favorites.splice(idx, 1);
+      } else {
+        favorites.push(gid);
+      }
+      persistFavorites();
+      updateFavBadge();
+      renderBooks();
+    }
+
+    function updateFavBadge() {
+      document.getElementById('fav-count').innerText = favorites.length;
+      document.getElementById('fav-modal-count').innerText = favorites.length;
+    }
+
+    function openFavoritesModal() {
+      const listEl = document.getElementById('fav-list');
+      if (favorites.length === 0) {
+        listEl.innerHTML = '<div class="text-slate-400 py-8 text-center font-medium">Belum ada buku yang ditandai bintang favorit.</div>';
+      } else {
+        const favBooks = allBooks.filter(b => favorites.includes(b[6]));
+        let html = '';
+        favBooks.forEach((b, fi) => {
+          const driveUrl = `https://drive.google.com/file/d/${b[6]}/view?usp=sharing`;
+          html += `
+            <div class="p-3 bg-slate-50 rounded-2xl flex items-center justify-between gap-3 border border-slate-200/80">
+              <div class="w-10 h-13 rounded bg-slate-800 overflow-hidden shadow-xs shrink-0 border border-slate-200">
+                <img data-fav-idx="${fi}" alt="Cover" loading="lazy" class="w-full h-full object-cover object-top">
+              </div>
+              <div class="truncate flex-1">
+                <h5 class="font-bold text-slate-800 truncate">${escapeHtml(b[0])}</h5>
+                <span class="text-[10px] text-slate-400 font-medium">${escapeHtml(displayCat(categories[b[1]]))} • ${b[4]} • ${b[5].toFixed(1)} MB</span>
+              </div>
+              <div class="flex items-center space-x-1.5 shrink-0">
+                <a href="${driveUrl}" target="_blank" rel="noopener noreferrer" onclick="trackClick('${b[6]}')" class="px-3 py-1 bg-slate-900 hover:bg-brand-600 text-white rounded-lg font-bold text-[11px]">Buka ↗</a>
+                <button onclick="toggleFavorite('${b[6]}'); openFavoritesModal();" class="text-slate-400 hover:text-red-500 p-1 font-bold">✕</button>
+              </div>
+            </div>
+          `;
+        });
+        listEl.innerHTML = html;
+        listEl.querySelectorAll('img[data-fav-idx]').forEach(im => {
+          const b = favBooks[Number(im.dataset.favIdx)];
+          if (b) attachCover(im, b);
+        });
+      }
+      document.getElementById('fav-modal').classList.remove('hidden');
+    }
+
+    function closeFavoritesModal() {
+      document.getElementById('fav-modal').classList.add('hidden');
+    }
+
+    function clearAllFavorites() {
+      if (confirm('Hapus seluruh daftar buku favorit?')) {
+        favorites = [];
+        persistFavorites();
+        updateFavBadge();
+        openFavoritesModal();
+        renderBooks();
+      }
+    }
+
+    // ============ MODAL BACA LANGSUNG (PREVIEW GDRIVE IN-APP) ============
+    function openReadModalByIdx(globalIdx) {
+      const book = filteredBooks[globalIdx];
+      if (!book) return;
+      const [title, catIdx, , , , , gid] = book;
+      if (!gid) {
+        alert('Berkas ini belum memiliki ID Google Drive resmi.');
+        return;
+      }
+      launchReadModal(title, displayCat(categories[catIdx] || ''), gid);
+    }
+
+    function openReadModal() {
+      if (currentDetailIdx < 0) return;
+      openReadModalByIdx(currentDetailIdx);
+    }
+
+    function launchReadModal(title, catName, gid) {
+      const modal = document.getElementById('read-modal');
+      const titleEl = document.getElementById('read-modal-title');
+      const catEl = document.getElementById('read-modal-cat');
+      const iframe = document.getElementById('read-modal-iframe');
+      const extBtn = document.getElementById('read-modal-external');
+      const spinner = document.getElementById('read-modal-spinner');
+
+      titleEl.innerText = title;
+      catEl.innerText = catName;
+      extBtn.href = `https://drive.google.com/file/d/${gid}/view`;
+      spinner.style.display = 'flex';
+      iframe.src = `https://drive.google.com/file/d/${gid}/preview`;
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeReadModal() {
+      const modal = document.getElementById('read-modal');
+      const iframe = document.getElementById('read-modal-iframe');
+      if (!modal.classList.contains('hidden')) {
+        iframe.src = '';
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+      }
+    }
+
+    // ============ MODAL QR CODE PER BUKU ============
+    function openQrModal() {
+      if (currentDetailIdx < 0) return;
+      const book = filteredBooks[currentDetailIdx];
+      if (!book || !book[6]) return;
+      const driveUrl = `https://drive.google.com/file/d/${book[6]}/view?usp=sharing`;
+      const box = document.getElementById('qr-canvas-box');
+      box.innerHTML = '';
+      new QRCode(box, {
+        text: driveUrl,
+        width: 220,
+        height: 220,
+        colorDark: '#0f172a',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.M
+      });
+      document.getElementById('qr-modal').classList.remove('hidden');
+    }
+
+    function closeQrModal() {
+      document.getElementById('qr-modal').classList.add('hidden');
+    }
+
+    function downloadQrImage() {
+      const canvas = document.querySelector('#qr-canvas-box canvas');
+      if (!canvas) return;
+      const link = document.createElement('a');
+      link.download = 'QR-POJAC-Buku.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+
+    // Tutup modal dengan tombol Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeReadModal();
+        closeQrModal();
+        closeDetailModal();
+        closeFavoritesModal();
+      }
+    });
+  </script>
+</body>
+</html>
