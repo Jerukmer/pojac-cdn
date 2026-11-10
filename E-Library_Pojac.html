@@ -417,24 +417,35 @@
         </div>
       </div>
 
-      <div class="pt-4 border-t border-slate-100 flex items-center justify-end">
-        <div class="flex items-center space-x-2.5">
-          <button onclick="openQrModal()" title="QR Code untuk dibuka di HP" class="px-4 py-2 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition flex items-center gap-1.5">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12v4m0-8V4m0 4h4M4 8h4.01M20 8h-4M4 20h4v-4m6-4v.01M4 16v4h4"></path></svg>
-            <span class="hidden sm:inline">QR</span>
+      <div class="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2.5">
+        <div class="flex items-center gap-2">
+          <button onclick="copyModalLink()" title="Salin tautan berkas" class="px-3.5 py-2 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+            <span>Salin Tautan</span>
           </button>
-          <button onclick="openReadModal()" class="px-4 py-2 text-xs font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-xl transition flex items-center gap-1.5">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+          <button onclick="openQrModal()" title="Tampilkan QR Code untuk scan di HP" class="px-3 py-2 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12v4m0-8V4m0 4h4M4 8h4.01M20 8h-4M4 20h4v-4m6-4v.01M4 16v4h4"></path></svg>
+            <span>QR</span>
+          </button>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <a id="modal-download-btn" href="#" target="_blank" rel="noopener noreferrer" download
+            class="px-3.5 py-2 text-xs font-bold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-xl transition flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            <span>Unduh Berkas</span>
+          </a>
+          <button onclick="openReadModal()" class="px-3.5 py-2 text-xs font-bold text-brand-700 bg-brand-50 hover:bg-brand-100 border border-brand-200 rounded-xl transition flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
             <span>Baca Langsung</span>
           </button>
-          <button onclick="closeDetailModal()" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition">
-            Tutup
-          </button>
-          <a id="modal-drive-btn" href="#" target="_blank" 
-            class="px-5 py-2 text-xs font-bold text-white bg-slate-900 hover:bg-brand-700 rounded-xl shadow-md transition flex items-center gap-1.5">
-            <span>Buka di Google Drive</span>
+          <a id="modal-drive-btn" href="#" target="_blank" rel="noopener noreferrer"
+            class="px-4 py-2 text-xs font-bold text-white bg-slate-900 hover:bg-brand-700 rounded-xl shadow-md transition flex items-center gap-1.5">
+            <span>Google Drive</span>
             <svg class="w-3.5 h-3.5 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
           </a>
+          <button onclick="closeDetailModal()" class="px-3 py-2 text-xs font-semibold text-slate-500 hover:bg-slate-100 rounded-xl transition">
+            Tutup
+          </button>
         </div>
       </div>
     </div>
@@ -455,9 +466,18 @@
       <div id="fav-list" class="flex-1 overflow-y-auto py-3 space-y-2 text-xs">
         <div class="text-slate-400 py-6 text-center font-medium">Belum ada buku yang ditandai bintang favorit.</div>
       </div>
-      <div class="pt-3 border-t border-slate-100 flex justify-between items-center text-xs">
-        <button onclick="clearAllFavorites()" class="text-red-500 hover:text-red-700 font-semibold">Hapus Semua</button>
-        <button onclick="closeFavoritesModal()" class="px-4 py-2 font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-xl">Tutup</button>
+      <div class="pt-3 border-t border-slate-100 flex flex-wrap justify-between items-center gap-2 text-xs">
+        <button onclick="clearAllFavorites()" class="text-red-500 hover:text-red-700 font-semibold px-2 py-1">Hapus Semua</button>
+        <div class="flex items-center gap-2">
+          <button onclick="copyFavoritesList()" title="Salin ringkasan daftar favorit ke papan klip" class="px-3.5 py-1.5 font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-xl transition flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+            <span>Salin Daftar</span>
+          </button>
+          <button onclick="shareFavoritesWhatsApp()" title="Kirim daftar referensi ke WhatsApp" class="px-3.5 py-1.5 font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-xs transition flex items-center gap-1.5">
+            <span>💬 WhatsApp</span>
+          </button>
+          <button onclick="closeFavoritesModal()" class="px-3.5 py-1.5 font-semibold text-slate-600 hover:bg-slate-100 rounded-xl">Tutup</button>
+        </div>
       </div>
     </div>
   </div>
@@ -852,6 +872,12 @@
       languages = window.POJAK_CATALOG.languages;
       allBooks = window.POJAK_CATALOG.items;
 
+      // Pra-indeks teks pencarian normalisasi (Arab + Latin) untuk performa instan 60fps
+      for (let i = 0; i < allBooks.length; i++) {
+        const b = allBooks[i];
+        b[9] = normalizeSearchText(b[0] + ' ' + b[7] + ' ' + b[2] + ' ' + (categories[b[1]] || ''));
+      }
+
       if (window.location.protocol.startsWith('http')) {
         const pill = document.getElementById('server-status-pill');
         if (pill) {
@@ -1019,21 +1045,43 @@
       return /[؀-ۿݐ-ݿࢠ-ࣿﭐ-﷿ﹰ-﻿]/.test(text);
     }
 
+    // Normalisasi pencarian cerdas untuk teks Arab & Latin (tanpa harakat, unifikasi alif/ya/ta-marbutah)
+    function normalizeSearchText(str) {
+      if (!str) return '';
+      return String(str)
+        .toLowerCase()
+        // Hapus harakat Arab (Fathah, Dammah, Kasrah, Sukun, Tanwin, Syaddah, Alif Khanjariyah)
+        .replace(/[ً-ٰٟ]/g, '')
+        // Hapus Tatweel (Kashida)
+        .replace(/ـ/g, '')
+        // Unifikasi bentuk Alif: [أ إ آ ٱ] -> ا
+        .replace(/[آأإٱ]/g, 'ا')
+        // Unifikasi Ya dan Alif Maqshurah: [ى ئ] -> ي
+        .replace(/[ىئ]/g, 'ي')
+        // Unifikasi Ta Marbutah: ة -> ه
+        .replace(/ة/g, 'ه')
+        // Normalisasi tanda kutip Latin, apostrof, dan tanda hubung
+        .replace(/[‘’“”`'"]/g, '')
+        .replace(/[\-_/\\[\]()]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
     // Tampilkan nama kategori tanpa awalan nomor urut ("01. Al-Qur'an..." -> "Al-Qur'an...")
     function displayCat(name) {
       return String(name || '').replace(/^\d+\.\s*/, '');
     }
 
     function applyFilters() {
+      const normQuery = normalizeSearchText(searchQuery);
+
       filteredBooks = allBooks.filter(book => {
-        // [title, cat_idx, jilid, lang_idx, format, size_mb, gdrive_id, subfolder, local_thumb]
-        const title = book[0];
+        // [title, cat_idx, jilid, lang_idx, format, size_mb, gdrive_id, subfolder, local_thumb, norm_text]
         const catIdx = book[1];
         const jilid = book[2];
         const langIdx = book[3];
         const langName = languages[langIdx];
         const fmt = book[4];
-        const subfolder = book[7];
 
         if (selectedCat !== null && catIdx !== selectedCat) return false;
         if (selectedLang && langName !== selectedLang) return false;
@@ -1041,12 +1089,9 @@
         if (selectedVol === 'multi' && jilid === '-') return false;
         if (selectedVol === 'single' && jilid !== '-') return false;
 
-        if (searchQuery) {
-          const matchTitle = title.toLowerCase().includes(searchQuery);
-          const matchSub = subfolder.toLowerCase().includes(searchQuery);
-          const matchVol = jilid.toLowerCase().includes(searchQuery);
-          const matchCat = categories[catIdx].toLowerCase().includes(searchQuery);
-          if (!matchTitle && !matchSub && !matchVol && !matchCat) return false;
+        if (normQuery) {
+          const haystack = book[9] || (book[0] + ' ' + book[7] + ' ' + book[2] + ' ' + (categories[catIdx] || ''));
+          if (!haystack.includes(normQuery)) return false;
         }
 
         return true;
@@ -1440,6 +1485,8 @@
       document.getElementById('modal-path').innerText = subfolder;
       document.getElementById('modal-link-input').value = driveUrl;
       document.getElementById('modal-drive-btn').href = driveUrl;
+      const dlBtn = document.getElementById('modal-download-btn');
+      if (dlBtn) dlBtn.href = `https://drive.google.com/uc?export=download&id=${gid}`;
 
       // Cover modal (thumbnail GDrive atau sampul elegan generatif)
       attachCover(document.getElementById('modal-cover-img'), book);
@@ -1451,11 +1498,72 @@
       document.getElementById('detail-modal').classList.add('hidden');
     }
 
+    // Toast pemberitahuan non-blocking
+    function showToast(message) {
+      let toast = document.getElementById('pojac-toast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'pojac-toast';
+        toast.className = 'fixed bottom-6 right-6 z-50 bg-slate-900 text-white text-xs font-semibold px-4 py-2.5 rounded-2xl shadow-2xl border border-slate-700/80 transition-all duration-300 opacity-0 transform translate-y-3 pointer-events-none flex items-center gap-2';
+        document.body.appendChild(toast);
+      }
+      toast.innerText = message;
+      toast.classList.remove('opacity-0', 'translate-y-3');
+      toast.classList.add('opacity-100', 'translate-y-0');
+      clearTimeout(window.__toastTimeout);
+      window.__toastTimeout = setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-3');
+      }, 2500);
+    }
+
     function copyModalLink() {
       const input = document.getElementById('modal-link-input');
+      if (!input) return;
       input.select();
-      navigator.clipboard.writeText(input.value);
-      alert('Tautan Google Drive berhasil disalin ke papan klip!');
+      navigator.clipboard.writeText(input.value).then(() => {
+        showToast('✅ Tautan Google Drive berhasil disalin!');
+      }).catch(() => {
+        showToast('✅ Tautan berhasil disalin!');
+      });
+    }
+
+    // Ekspor dan Berbagi Buku Favorit
+    function getFavoritesSummaryText() {
+      const favBooks = allBooks.filter(b => favorites.includes(b[6]));
+      if (favBooks.length === 0) return '';
+      let text = '📚 *Daftar Kitab & Referensi Pilihan — POJAC E-Library*\n';
+      text += `Total: ${favBooks.length} berkas\n\n`;
+      favBooks.forEach((b, i) => {
+        text += `${i + 1}. *${b[0]}*\n`;
+        text += `   📁 ${displayCat(categories[b[1]])} • ${b[4]} • ${b[5].toFixed(1)} MB\n`;
+        text += `   🔗 https://drive.google.com/file/d/${b[6]}/view\n\n`;
+      });
+      text += '🔍 Akses katalog lengkap: https://pojaca.blogspot.com/?katalog=1';
+      return text;
+    }
+
+    function shareFavoritesWhatsApp() {
+      const text = getFavoritesSummaryText();
+      if (!text) {
+        showToast('Belum ada buku dalam daftar favorit.');
+        return;
+      }
+      const waUrl = 'https://api.whatsapp.com/send?text=' + encodeURIComponent(text);
+      window.open(waUrl, '_blank');
+    }
+
+    function copyFavoritesList() {
+      const text = getFavoritesSummaryText();
+      if (!text) {
+        showToast('Belum ada buku dalam daftar favorit.');
+        return;
+      }
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('✅ Ringkasan favorit berhasil disalin ke papan klip!');
+      }).catch(() => {
+        showToast('✅ Daftar favorit tersalin!');
+      });
     }
 
     function toggleFavorite(gid) {
